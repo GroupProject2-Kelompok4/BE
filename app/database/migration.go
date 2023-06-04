@@ -14,7 +14,6 @@ var log = utils.Log()
 
 func InitMigration(db *gorm.DB) error {
 	err := db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(
-		&Team{},
 		&user.User{},
 		&class.Class{},
 		&mentee.Mentee{},
@@ -25,7 +24,6 @@ func InitMigration(db *gorm.DB) error {
 		log.Fatal(err.Error())
 	}
 
-	initTeam(db)
 	initSuperAdmin(db)
 
 	return err

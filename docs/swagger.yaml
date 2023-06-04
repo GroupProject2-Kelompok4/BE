@@ -78,7 +78,7 @@ paths:
             schema:
               $ref: "#/components/schemas/users"
             example:
-              username: "peterzalai"
+              fullname: "peterzalai"
               email: "peterzalai@gmail.com"
               password: "@Secret123"
               role: "user" 
@@ -87,9 +87,9 @@ paths:
         '201':
           $ref: '#/components/responses/Response201CreateUser'
         '400':
-          $ref: '#/components/responses/Response400Unauthorized'
-        '404':
-          $ref: '#/components/responses/Response404'
+          $ref: '#/components/responses/Response400'
+        '401':
+          $ref: '#/components/responses/Response401Unauthorized'
         '500':
           $ref: '#/components/responses/Response500'
       security:
@@ -284,7 +284,9 @@ paths:
         '200':
           $ref: '#/components/responses/Response200UserDelete'
         '400':
-          $ref: '#/components/responses/Response400Unauthorized'
+          $ref: '#/components/responses/Response400'
+        '401':
+          $ref: '#/components/responses/Response401Unauthorized'
         '500':
           $ref: '#/components/responses/Response500'
       security:
@@ -788,7 +790,7 @@ components:
               message: "Successful created an account"
               data:
                 user_id: "6e03f45c-010a-11ee-8036-e8fb1c216033"
-                username: "peterzalai"
+                fullname: "peterzalai"
                 email: "peterzalai@gmail.com"
                 role: "user"
                 team_id: 1
@@ -1297,7 +1299,7 @@ components:
                 type: string
                 example: "Bad request"
 
-    Response400Unauthorized:
+    Response401Unauthorized:
       description: Bad request
       content:
         application/json:
@@ -1306,10 +1308,10 @@ components:
             properties:
               code:
                 type: integer
-                example: 400
+                example: 401
               message:
                 type: string
-                example: "Bad request, unauthorized access."
+                example: "Unauthorized access."
 
     Response404:
       description: Not Found

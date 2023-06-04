@@ -18,10 +18,11 @@ func JWTMiddleware() echo.MiddlewareFunc {
 	})
 }
 
-func CreateToken(id string) (string, error) {
+func CreateToken(id, role string) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["id"] = id
+	claims["role"] = role
 	claims["exp"] = time.Now().Add(15 * time.Minute).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	result, err := token.SignedString([]byte(config.JWT))
@@ -32,12 +33,13 @@ func CreateToken(id string) (string, error) {
 	return result, err
 }
 
-func ExtractToken(e echo.Context) (string, error) {
+func ExtractToken(e echo.Context) (string, string, error) {
 	user := e.Get("user").(*jwt.Token)
 	if user.Valid {
 		claims := user.Claims.(jwt.MapClaims)
 		id := claims["id"].(string)
-		return id, nil
+		role := claims["role"].(string)
+		return id, role, nil
 	}
-	return "", errors.New("failed to extract jwt-token")
+	return "", "", errors.New("failed to extract jwt-token")
 }

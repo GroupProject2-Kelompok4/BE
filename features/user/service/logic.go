@@ -6,20 +6,17 @@ import (
 
 	"github.com/GroupProject2-Kelompok4/BE/features/user"
 	"github.com/GroupProject2-Kelompok4/BE/utils"
-	"github.com/go-playground/validator/v10"
 )
 
 var log = utils.Log()
 
 type userService struct {
-	query    user.UserData
-	validate *validator.Validate
+	query user.UserData
 }
 
 func New(ud user.UserData) user.UserService {
 	return &userService{
-		query:    ud,
-		validate: validator.New(),
+		query: ud,
 	}
 }
 
@@ -50,4 +47,30 @@ func (us *userService) Login(request user.UserCore) (user.UserCore, string, erro
 	}
 
 	return result, token, nil
+}
+
+// Register implements user.UserService
+func (us *userService) Register(request user.UserCore) (user.UserCore, error) {
+	if request.Fullname == "" || request.Email == "" || request.Password == "" || request.Status == "" {
+		log.Error("request cannot be empty")
+		return user.UserCore{}, errors.New("request cannot be empty")
+	}
+
+	result, err := us.query.Register(request)
+	if err != nil {
+		message := ""
+		if strings.Contains(err.Error(), "error while hashing password") {
+			log.Error("error while hashing password")
+			message = "error while hashing password"
+		} else if strings.Contains(err.Error(), "error insert data, duplicated") {
+			log.Error("error insert data, duplicated")
+			message = "error insert data, duplicated"
+		} else {
+			log.Error("internal server error")
+			message = "internal server error"
+		}
+		return user.UserCore{}, errors.New(message)
+	}
+
+	return result, nil
 }
