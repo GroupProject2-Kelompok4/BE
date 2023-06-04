@@ -59,7 +59,7 @@ func readEnv() *AppConfig {
 	}
 
 	if val, found := os.LookupEnv("ADMINPASSWORD"); found {
-		JWT = val
+		ADMINPASSWORD = val
 		isRead = false
 	}
 
@@ -80,7 +80,7 @@ func readEnv() *AppConfig {
 		app.DBPORT = viper.GetString("DBPORT")
 		app.DBNAME = viper.GetString("DBNAME")
 		JWT = viper.GetString("JWT")
-		JWT = viper.GetString("ADMINPASSWORD")
+		ADMINPASSWORD = viper.GetString("ADMINPASSWORD")
 	}
 
 	return &app

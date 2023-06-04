@@ -43,12 +43,39 @@ func (uq *userQuery) Login(request user.UserCore) (user.UserCore, string, error)
 		return user.UserCore{}, "", errors.New("password does not match")
 	}
 
-	token, err := middlewares.CreateToken((result.UserID))
+	token, err := middlewares.CreateToken(result.UserID, result.Role)
 	if err != nil {
 		log.Error("error while creating jwt token")
 		return user.UserCore{}, "", errors.New("error while creating jwt token")
 	}
 
-	log.Sugar().Infof("user login: %s, %s", result.Fullname, result.Email)
+	log.Sugar().Infof("user has been logged in: %s", result.UserID)
 	return userModels(result), token, nil
+}
+
+// Register implements user.UserData
+func (uq *userQuery) Register(request user.UserCore) (user.UserCore, error) {
+	hashed, err := helper.HashPassword(request.Password)
+	if err != nil {
+		log.Error("error while hashing password")
+		return user.UserCore{}, errors.New("error while hashing password")
+	}
+
+	request.Password = hashed
+	request.UserPicture = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+	req := userEntities(request)
+	query := uq.db.Table("users").Create(&req)
+	if query.Error != nil {
+		log.Error("error insert data, duplicated")
+		return user.UserCore{}, errors.New("error insert data, duplicated")
+	}
+
+	rowAffect := query.RowsAffected
+	if rowAffect == 0 {
+		log.Warn("no user has been created")
+		return user.UserCore{}, errors.New("row affected : 0")
+	}
+
+	log.Sugar().Infof("new user has been created: %s", req.UserID)
+	return userModels(req), nil
 }

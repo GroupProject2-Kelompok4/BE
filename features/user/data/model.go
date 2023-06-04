@@ -17,10 +17,9 @@ type User struct {
 	Role        string `gorm:"type:enum('admin', 'user');default:'user'"`
 	Status      string `gorm:"type:enum('manager', 'mentor', 'team people skill', 'team placement'); default:'mentor'"`
 	UserPicture string
-	CreatedAt   time.Time `gorm:"type:datetime"`
-	UpdatedAt   time.Time `gorm:"type:datetime"`
-	IsDeleted   bool      `gorm:"type:boolean"`
-	TeamID      uint
+	CreatedAt   time.Time           `gorm:"type:datetime"`
+	UpdatedAt   time.Time           `gorm:"type:datetime"`
+	IsDeleted   bool                `gorm:"type:boolean"`
 	Classes     []class.Class       `gorm:"foreignKey:UserID"`
 	Feedbacks   []feedback.Feedback `gorm:"foreignKey:UserID"`
 }
@@ -39,7 +38,6 @@ func userModels(u User) user.UserCore {
 		CreatedAt:   u.CreatedAt,
 		UpdatedAt:   u.UpdatedAt,
 		IsDeleted:   u.IsDeleted,
-		TeamID:      u.TeamID,
 	}
 }
 
@@ -57,6 +55,5 @@ func userEntities(u user.UserCore) User {
 		CreatedAt:   u.CreatedAt,
 		UpdatedAt:   u.UpdatedAt,
 		IsDeleted:   u.IsDeleted,
-		TeamID:      u.TeamID,
 	}
 }

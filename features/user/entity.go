@@ -26,12 +26,15 @@ type UserCore struct {
 
 type UserHandler interface {
 	Login() echo.HandlerFunc
+	Register() echo.HandlerFunc
 }
 
 type UserService interface {
 	Login(request UserCore) (UserCore, string, error)
+	Register(request UserCore) (UserCore, error)
 }
 
 type UserData interface {
 	Login(request UserCore) (UserCore, string, error)
+	Register(request UserCore) (UserCore, error)
 }

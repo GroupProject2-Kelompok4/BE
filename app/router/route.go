@@ -4,6 +4,7 @@ import (
 	ud "github.com/GroupProject2-Kelompok4/BE/features/user/data"
 	uh "github.com/GroupProject2-Kelompok4/BE/features/user/handler"
 	us "github.com/GroupProject2-Kelompok4/BE/features/user/service"
+	"github.com/GroupProject2-Kelompok4/BE/utils/middlewares"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"gorm.io/gorm"
@@ -24,6 +25,6 @@ func initUserRouter(db *gorm.DB, e *echo.Echo) {
 	userService := us.New(userData)
 	userHandler := uh.New(userService)
 
-	// Authentication
 	e.POST("/login", userHandler.Login())
+	e.POST("/register", userHandler.Register(), middlewares.JWTMiddleware())
 }

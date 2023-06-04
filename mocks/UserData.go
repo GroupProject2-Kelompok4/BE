@@ -43,6 +43,30 @@ func (_m *UserData) Login(request user.UserCore) (user.UserCore, string, error) 
 	return r0, r1, r2
 }
 
+// Register provides a mock function with given fields: request
+func (_m *UserData) Register(request user.UserCore) (user.UserCore, error) {
+	ret := _m.Called(request)
+
+	var r0 user.UserCore
+	var r1 error
+	if rf, ok := ret.Get(0).(func(user.UserCore) (user.UserCore, error)); ok {
+		return rf(request)
+	}
+	if rf, ok := ret.Get(0).(func(user.UserCore) user.UserCore); ok {
+		r0 = rf(request)
+	} else {
+		r0 = ret.Get(0).(user.UserCore)
+	}
+
+	if rf, ok := ret.Get(1).(func(user.UserCore) error); ok {
+		r1 = rf(request)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 type mockConstructorTestingTNewUserData interface {
 	mock.TestingT
 	Cleanup(func())
