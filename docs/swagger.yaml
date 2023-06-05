@@ -98,8 +98,8 @@ paths:
     put:
       tags:
         - Users
-      summary: Update user profile by admin
-      description: Update user information by admin
+      summary: Update user profile
+      description: Update user information
       requestBody:
         required: true
         content:
@@ -124,8 +124,8 @@ paths:
                   type: integer
                   example: 1
                 status:
-                  type: boolean
-                  example: true
+                  type: string
+                  example: active
                 image:
                   type: string
       responses:
@@ -219,7 +219,7 @@ paths:
     put:
       tags:
         - Users
-      summary: Update user profile
+      summary: Update user profile by admin
       description: Update user information by their ID, admin also have authority
       parameters:
         - name: user_id
@@ -1092,7 +1092,7 @@ components:
                   role: "admin"
                   team_id: 1
                   image: "admin.png"
-                  status: true
+                  status: active
                   created_at: "2023/03/07"
                   updated_at: "2023/04/07"
             example update 2:
@@ -1106,6 +1106,7 @@ components:
                   role: "user"
                   team_id: 1
                   image: "peterzalai.png"
+                  status: active
                   created_at: "2023/03/07"
                   updated_at: "2023/04/07"
 
@@ -1371,7 +1372,11 @@ components:
         team_id:
           type: integer
         status:
-          type: boolean
+          type: string
+          enum:
+            - active
+            - non-active
+            - deleted
         image: 
           type: string
         created_at:
