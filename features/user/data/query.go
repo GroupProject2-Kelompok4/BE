@@ -7,6 +7,7 @@ import (
 	"github.com/GroupProject2-Kelompok4/BE/utils"
 	"github.com/GroupProject2-Kelompok4/BE/utils/helper"
 	"github.com/GroupProject2-Kelompok4/BE/utils/middlewares"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -55,12 +56,19 @@ func (uq *userQuery) Login(request user.UserCore) (user.UserCore, string, error)
 
 // Register implements user.UserData
 func (uq *userQuery) Register(request user.UserCore) (user.UserCore, error) {
+	userID, err := uuid.NewUUID()
+	if err != nil {
+		log.Warn("error while create uuid for admin")
+		return user.UserCore{}, nil
+	}
+
 	hashed, err := helper.HashPassword(request.Password)
 	if err != nil {
 		log.Error("error while hashing password")
 		return user.UserCore{}, errors.New("error while hashing password")
 	}
 
+	request.UserID = userID.String()
 	request.Password = hashed
 	request.UserPicture = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
 	req := userEntities(request)
@@ -133,4 +141,33 @@ func (uq *userQuery) DeactiveUser(userId string) error {
 	}
 
 	return nil
+}
+
+// UpdateUserProfile implements user.UserData
+func (uq *userQuery) UpdateProfile(userId string, request user.UserCore) (user.UserCore, error) {
+	hashed, err := helper.HashPassword(request.Password)
+	if err != nil {
+		log.Error("error while hashing password")
+		return user.UserCore{}, errors.New("error while hashing password")
+	}
+
+	request.Password = hashed
+	req := userEntities(request)
+	query := uq.db.Table("users").Where("user_id = ? AND is_deleted = 0", userId).Updates(&req)
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
+		log.Error("user profile record not found")
+		return user.UserCore{}, errors.New("user profile record not found")
+	}
+
+	if query.RowsAffected == 0 {
+		log.Warn("no user has been created")
+		return user.UserCore{}, errors.New("row affected : 0")
+	}
+
+	if query.Error != nil {
+		log.Error("error while updating user")
+		return user.UserCore{}, errors.New("duplicate data entry")
+	}
+
+	return userModels(req), nil
 }

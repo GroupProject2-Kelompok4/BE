@@ -16,6 +16,15 @@ type RegisterRequest struct {
 	Role     string `json:"role" form:"role"`
 }
 
+type UpdateProfileRequest struct {
+	Fullname *string `json:"fullname" form:"fullname"`
+	Email    *string `json:"email" form:"email"`
+	Password *string `json:"password" form:"password"`
+	Team     *string `json:"team" form:"team"`
+	Status   *string `json:"status" form:"status"`
+	Role     *string `json:"role" form:"role"`
+}
+
 func RequestToCore(data interface{}) user.UserCore {
 	res := user.UserCore{}
 	switch v := data.(type) {
@@ -29,6 +38,25 @@ func RequestToCore(data interface{}) user.UserCore {
 		res.Team = v.Team
 		res.Status = v.Status
 		res.Role = v.Role
+	case *UpdateProfileRequest:
+		if v.Fullname != nil {
+			res.Fullname = *v.Fullname
+		}
+		if v.Email != nil {
+			res.Email = *v.Email
+		}
+		if v.Password != nil {
+			res.Password = *v.Password
+		}
+		if v.Team != nil {
+			res.Team = *v.Team
+		}
+		if v.Status != nil {
+			res.Status = *v.Status
+		}
+		if v.Role != nil {
+			res.Role = *v.Role
+		}
 	default:
 		return user.UserCore{}
 	}

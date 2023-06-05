@@ -6,7 +6,6 @@ import (
 	class "github.com/GroupProject2-Kelompok4/BE/features/class/data"
 	feedback "github.com/GroupProject2-Kelompok4/BE/features/feedback/data"
 	"github.com/GroupProject2-Kelompok4/BE/features/user"
-	"github.com/google/uuid"
 )
 
 type User struct {
@@ -27,9 +26,8 @@ type User struct {
 
 // User-model to user-core
 func userModels(u User) user.UserCore {
-	User_ID, _ := uuid.NewUUID()
 	return user.UserCore{
-		UserID:      User_ID.String(),
+		UserID:      u.UserID,
 		Fullname:    u.Fullname,
 		Email:       u.Email,
 		Password:    u.Password,
@@ -45,9 +43,8 @@ func userModels(u User) user.UserCore {
 
 // User-core to user-model
 func userEntities(u user.UserCore) User {
-	User_ID, _ := uuid.NewUUID()
 	return User{
-		UserID:      User_ID.String(),
+		UserID:      u.UserID,
 		Fullname:    u.Fullname,
 		Email:       u.Email,
 		Password:    u.Password,

@@ -26,8 +26,10 @@ func initUserRouter(db *gorm.DB, e *echo.Echo) {
 	userHandler := uh.New(userService)
 
 	e.POST("/login", userHandler.Login())
-	e.POST("/register", userHandler.Register(), middlewares.JWTMiddleware())
-	e.GET("/users", userHandler.SearchUser(), middlewares.JWTMiddleware())
-	e.GET("/users/:userId", userHandler.ProfileUser(), middlewares.JWTMiddleware())
-	e.DELETE("/users/:userId", userHandler.DeactiveUser(), middlewares.JWTMiddleware())
+	e.POST("/register", userHandler.Register(), middlewares.JWTMiddleware())        //*** by admin
+	e.GET("/users", userHandler.SearchUser(), middlewares.JWTMiddleware())          //*** both
+	e.GET("/users/:id", userHandler.ProfileUser(), middlewares.JWTMiddleware())     //*** both
+	e.DELETE("/users/:id", userHandler.DeactiveUser(), middlewares.JWTMiddleware()) //*** by admin
+	e.PUT("/users", userHandler.UpdateProfile(), middlewares.JWTMiddleware())       //*** by user
+	// e.PUT("/users/:id", userHandler.UpdateUserProfile(), middlewares.JWTMiddleware()) //*** by admin
 }
