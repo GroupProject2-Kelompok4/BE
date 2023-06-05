@@ -330,3 +330,70 @@ func TestUpdateProfile(t *testing.T) {
 		data.AssertExpectations(t)
 	})
 }
+
+func TestUpdateUserProfile(t *testing.T) {
+	data := mocks.NewUserData(t)
+	arguments := user.UserCore{
+		Fullname: "admin",
+		Email:    "admin@gmail.com",
+		Password: "@S3#cr3tP4ss#word123",
+		Status:   "mentor",
+		Role:     "user",
+	}
+	result := user.UserCore{
+		UserID:   "550e8400-e29b-41d4-a716-446655440000",
+		Fullname: "admin",
+		Email:    "admin@gmail.com",
+		Password: "@S3#cr3tP4ss#word123",
+		Status:   "mentor",
+		Role:     "user",
+	}
+	service := New(data)
+
+	t.Run("request cannot be empty", func(t *testing.T) {
+		request := user.UserCore{
+			Fullname: "",
+			Email:    "",
+			Password: "",
+			Status:   "",
+		}
+		_, err := service.UpdateUserProfile("550e8400-e29b-41d4-a716-446655440000", request)
+		expectedErr := errors.New("request cannot be empty")
+		assert.NotNil(t, err)
+		assert.EqualError(t, err, expectedErr.Error(), "Expected error message does not match")
+		data.AssertExpectations(t)
+	})
+
+	t.Run("success update account", func(t *testing.T) {
+		data.On("UpdateUserProfile", mock.Anything).Return(result, nil).Once()
+		res, err := service.UpdateUserProfile("550e8400-e29b-41d4-a716-446655440000", arguments)
+		assert.Nil(t, err)
+		assert.Equal(t, result.UserID, res.UserID)
+		data.AssertExpectations(t)
+	})
+
+	t.Run("user profile record not found", func(t *testing.T) {
+		data.On("UpdateUserProfile", "550e8400-e29b-41d4-a716-446655440000").Return(errors.New("user profile record not found")).Once()
+		_, err := service.UpdateUserProfile("550e8400-e29b-41d4-a716-446655440000", arguments)
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, err, "user profile record not found")
+		data.AssertExpectations(t)
+	})
+
+	t.Run("error updating data, duplicated", func(t *testing.T) {
+		data.On("UpdateUserProfile", "550e8400-e29b-41d4-a716-446655440000", arguments).Return(user.UserCore{}, errors.New("error updating data, duplicated")).Once()
+		res, err := service.UpdateUserProfile("550e8400-e29b-41d4-a716-446655440000", arguments)
+		assert.NotNil(t, err)
+		assert.Equal(t, "", res.UserID)
+		assert.ErrorContains(t, err, "duplicated")
+		data.AssertExpectations(t)
+	})
+
+	t.Run("internal server error", func(t *testing.T) {
+		data.On("UpdateUserProfile", "550e8400-e29b-41d4-a716-446655440000").Return(errors.New("internal server error")).Once()
+		_, err := service.UpdateUserProfile("550e8400-e29b-41d4-a716-446655440000", arguments)
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, err, "internal server error")
+		data.AssertExpectations(t)
+	})
+}

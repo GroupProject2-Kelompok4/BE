@@ -227,6 +227,45 @@ func (uh *userHandler) UpdateProfile() echo.HandlerFunc {
 		}
 
 		resp := updateUserProfile(result)
-		return c.JSON(http.StatusCreated, helper.ResponseFormat(http.StatusCreated, "Successfully created an account.", resp, nil))
+		return c.JSON(http.StatusCreated, helper.ResponseFormat(http.StatusCreated, "Successfully updated an account.", resp, nil))
+	}
+}
+
+// UpdateUserProfile implements user.UserHandler
+func (uh *userHandler) UpdateUserProfile() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		request := UpdateProfileRequest{}
+		_, role, errToken := middlewares.ExtractToken(c)
+		if errToken != nil {
+			c.Logger().Error("missing or malformed JWT")
+			return c.JSON(http.StatusUnauthorized, helper.ResponseFormat(http.StatusUnauthorized, "Missing or Malformed JWT.", nil, nil))
+		}
+		if role != "admin" {
+			c.Logger().Error("unauthorized access")
+			return c.JSON(http.StatusUnauthorized, helper.ResponseFormat(http.StatusUnauthorized, "Unauthorized access", nil, nil))
+		}
+
+		userId := c.Param("id")
+		errBind := c.Bind(&request)
+		if errBind != nil {
+			c.Logger().Error("error on bind login input")
+			return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
+		}
+
+		result, err := uh.service.UpdateProfile(userId, RequestToCore(&request))
+		if err != nil {
+			if strings.Contains(err.Error(), "empty") {
+				return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
+			}
+			if strings.Contains(err.Error(), "duplicated") {
+				return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
+			}
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, helper.ResponseFormat(http.StatusInternalServerError, "Internal server error", nil, nil))
+			}
+		}
+
+		resp := updateUserProfile(result)
+		return c.JSON(http.StatusCreated, helper.ResponseFormat(http.StatusCreated, "Successfully updated an account.", resp, nil))
 	}
 }

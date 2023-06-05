@@ -32,6 +32,7 @@ type UserHandler interface {
 	ProfileUser() echo.HandlerFunc
 	DeactiveUser() echo.HandlerFunc
 	UpdateProfile() echo.HandlerFunc
+	UpdateUserProfile() echo.HandlerFunc
 }
 
 type UserService interface {
@@ -41,6 +42,7 @@ type UserService interface {
 	ProfileUser(userId string) (UserCore, error)
 	DeactiveUser(userId string) error
 	UpdateProfile(userId string, request UserCore) (UserCore, error)
+	UpdateUserProfile(userId string, request UserCore) (UserCore, error)
 }
 
 type UserData interface {
@@ -50,4 +52,5 @@ type UserData interface {
 	ProfileUser(userId string) (UserCore, error)
 	DeactiveUser(userId string) error
 	UpdateProfile(userId string, request UserCore) (UserCore, error)
+	UpdateUserProfile(userId string, request UserCore) (UserCore, error)
 }

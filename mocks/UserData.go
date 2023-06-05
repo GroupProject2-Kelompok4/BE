@@ -162,6 +162,30 @@ func (_m *UserData) UpdateProfile(userId string, request user.UserCore) (user.Us
 	return r0, r1
 }
 
+// UpdateUserProfile provides a mock function with given fields: userId, request
+func (_m *UserData) UpdateUserProfile(userId string, request user.UserCore) (user.UserCore, error) {
+	ret := _m.Called(userId, request)
+
+	var r0 user.UserCore
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, user.UserCore) (user.UserCore, error)); ok {
+		return rf(userId, request)
+	}
+	if rf, ok := ret.Get(0).(func(string, user.UserCore) user.UserCore); ok {
+		r0 = rf(userId, request)
+	} else {
+		r0 = ret.Get(0).(user.UserCore)
+	}
+
+	if rf, ok := ret.Get(1).(func(string, user.UserCore) error); ok {
+		r1 = rf(userId, request)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 type mockConstructorTestingTNewUserData interface {
 	mock.TestingT
 	Cleanup(func())
