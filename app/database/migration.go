@@ -13,7 +13,7 @@ import (
 var log = utils.Log()
 
 func InitMigration(db *gorm.DB) error {
-	err := db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(
+	err := db.AutoMigrate(
 		&user.User{},
 		&class.Class{},
 		&mentee.Mentee{},
