@@ -1,13 +1,19 @@
 package helper
 
-func ResponseFormat(code int, msg string, data any) (int, map[string]any) {
-	result := map[string]any{}
-	result["code"] = code
-	result["message"] = msg
+type DataResponse struct {
+	Code       int         `json:"code"`
+	Message    string      `json:"message"`
+	Data       interface{} `json:"data,omitempty"`
+	Pagination interface{} `json:"pagination,omitempty"`
+}
 
-	if data != nil {
-		result["data"] = data
+func ResponseFormat(code int, message string, data interface{}, pagination interface{}) DataResponse {
+	result := DataResponse{
+		Code:       code,
+		Message:    message,
+		Data:       data,
+		Pagination: pagination,
 	}
 
-	return code, result
+	return result
 }

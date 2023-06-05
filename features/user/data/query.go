@@ -79,3 +79,21 @@ func (uq *userQuery) Register(request user.UserCore) (user.UserCore, error) {
 	log.Sugar().Infof("new user has been created: %s", req.UserID)
 	return userModels(req), nil
 }
+
+// SearchUser implements user.UserData
+func (uq *userQuery) SearchUser(keyword string, limit, offset int) ([]user.UserCore, uint, error) {
+	users := []User{}
+	var count int64
+	query := uq.db.Where("fullname LIKE ? OR email LIKE ? OR role LIKE ? OR status LIKE ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%").Where("is_deleted = 0").Limit(limit).Offset(offset).Find(&users).Count(&count)
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
+		log.Sugar().Errorf("users with keyword %s not found.", keyword)
+		return nil, 0, errors.New("not found, error while retrieving list users")
+	}
+
+	result := make([]user.UserCore, len(users))
+	for i, user := range users {
+		result[i] = userModels(user)
+	}
+
+	return result, uint(count), nil
+}

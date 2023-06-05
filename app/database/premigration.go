@@ -27,14 +27,15 @@ func initSuperAdmin(db *gorm.DB) error {
 		Fullname:    "admin",
 		Email:       "admin@gmail.com",
 		Password:    hashed,
+		Team:        "manager",
 		Role:        "admin",
-		Status:      "manager",
+		Status:      "active",
 		UserPicture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
 		IsDeleted:   false,
 	}
 
 	var count int64
-	db.Table("users").Where("role = 'admin' AND status = 'manager'").Count(&count)
+	db.Table("users").Where("role = 'admin' AND team = 'manager'").Count(&count)
 	if count > 0 {
 		log.Warn("super admin already exists")
 		return nil

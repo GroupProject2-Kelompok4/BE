@@ -120,7 +120,6 @@ func TestRegister(t *testing.T) {
 		assert.NotEmpty(t, result.Fullname)
 		assert.NotEmpty(t, result.Email)
 		assert.NotEmpty(t, result.Password)
-		assert.NotEmpty(t, result.Status)
 		data.AssertExpectations(t)
 	})
 
@@ -148,6 +147,54 @@ func TestRegister(t *testing.T) {
 		assert.NotNil(t, err)
 		assert.Equal(t, "", res.UserID)
 		assert.ErrorContains(t, err, "internal server error")
+		data.AssertExpectations(t)
+	})
+}
+
+func TestSearchUser(t *testing.T) {
+	data := mocks.NewUserData(t)
+	service := New(data)
+	keyword := "admin"
+	limit := 10
+	offset := 0
+	expectedResult := []user.UserCore{
+		{UserID: "550e8400-e29b-41d4-a716-446655440000", Fullname: "admin", Email: "admin@mail.com"},
+	}
+	expectedCount := uint(1)
+
+	t.Run("success", func(t *testing.T) {
+
+		data.On("SearchUser", keyword, limit, offset).Return(expectedResult, expectedCount, nil)
+
+		result, _, err := service.SearchUser(keyword, limit, offset)
+
+		assert.Nil(t, err)
+		assert.Len(t, result, 1)
+		assert.Equal(t, expectedResult[0].UserID, result[0].UserID)
+		assert.Equal(t, expectedResult[0].Fullname, result[0].Fullname)
+		assert.Equal(t, expectedResult[0].Email, result[0].Email)
+		data.AssertExpectations(t)
+	})
+
+	t.Run("not found", func(t *testing.T) {
+		data.On("SearchUser", keyword, limit, offset).Return([]user.UserCore{}, uint(0), errors.New("not found, error while retrieving list users")).Once()
+
+		result, _, err := service.SearchUser(keyword, limit, offset)
+
+		assert.NotNil(t, uint(0), err)
+		assert.Empty(t, result)
+		assert.EqualError(t, err, "not found, error while retrieving list users")
+		data.AssertExpectations(t)
+	})
+
+	t.Run("internal server error", func(t *testing.T) {
+		data.On("SearchUser", keyword, limit, offset).Return([]user.UserCore{}, uint(0), errors.New("internal server error")).Once()
+
+		result, _, err := service.SearchUser(keyword, limit, offset)
+
+		assert.NotNil(t, uint(0), err)
+		assert.Empty(t, result)
+		assert.EqualError(t, err, "internal server error")
 		data.AssertExpectations(t)
 	})
 }

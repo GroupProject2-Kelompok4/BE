@@ -51,7 +51,7 @@ func (us *userService) Login(request user.UserCore) (user.UserCore, string, erro
 
 // Register implements user.UserService
 func (us *userService) Register(request user.UserCore) (user.UserCore, error) {
-	if request.Fullname == "" || request.Email == "" || request.Password == "" || request.Status == "" {
+	if request.Fullname == "" || request.Email == "" || request.Password == "" {
 		log.Error("request cannot be empty")
 		return user.UserCore{}, errors.New("request cannot be empty")
 	}
@@ -73,4 +73,19 @@ func (us *userService) Register(request user.UserCore) (user.UserCore, error) {
 	}
 
 	return result, nil
+}
+
+// SearchUser implements user.UserService
+func (us *userService) SearchUser(keyword string, limit, offset int) ([]user.UserCore, uint, error) {
+	result, count, err := us.query.SearchUser(keyword, limit, offset)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			log.Error("not found, error while retrieving list users")
+			return []user.UserCore{}, 0, errors.New("not found, error while retrieving list users")
+		} else {
+			log.Error("internal server error")
+			return []user.UserCore{}, 0, errors.New("internal server error")
+		}
+	}
+	return result, count, nil
 }

@@ -67,6 +67,39 @@ func (_m *UserService) Register(request user.UserCore) (user.UserCore, error) {
 	return r0, r1
 }
 
+// SearchUser provides a mock function with given fields: keyword, limit, offset
+func (_m *UserService) SearchUser(keyword string, limit int, offset int) ([]user.UserCore, uint, error) {
+	ret := _m.Called(keyword, limit, offset)
+
+	var r0 []user.UserCore
+	var r1 uint
+	var r2 error
+	if rf, ok := ret.Get(0).(func(string, int, int) ([]user.UserCore, uint, error)); ok {
+		return rf(keyword, limit, offset)
+	}
+	if rf, ok := ret.Get(0).(func(string, int, int) []user.UserCore); ok {
+		r0 = rf(keyword, limit, offset)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]user.UserCore)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, int, int) uint); ok {
+		r1 = rf(keyword, limit, offset)
+	} else {
+		r1 = ret.Get(1).(uint)
+	}
+
+	if rf, ok := ret.Get(2).(func(string, int, int) error); ok {
+		r2 = rf(keyword, limit, offset)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
 type mockConstructorTestingTNewUserService interface {
 	mock.TestingT
 	Cleanup(func())

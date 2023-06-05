@@ -14,8 +14,9 @@ type User struct {
 	Fullname    string `gorm:"type:varchar(100);not null;unique"`
 	Email       string `gorm:"type:varchar(100);not null;unique"`
 	Password    string
-	Role        string `gorm:"type:enum('admin', 'user');default:'user'"`
-	Status      string `gorm:"type:enum('manager', 'mentor', 'team people skill', 'team placement'); default:'mentor'"`
+	Team        string `gorm:"type:enum('manager', 'mentor', 'team people skill', 'team placement'); default:'mentor'"`
+	Role        string `gorm:"type:enum('admin', 'user'); default:'user'"`
+	Status      string `gorm:"type:enum('active', 'non-active', 'deleted'); default:'active'"`
 	UserPicture string
 	CreatedAt   time.Time           `gorm:"type:datetime"`
 	UpdatedAt   time.Time           `gorm:"type:datetime"`
@@ -32,6 +33,7 @@ func userModels(u User) user.UserCore {
 		Fullname:    u.Fullname,
 		Email:       u.Email,
 		Password:    u.Password,
+		Team:        u.Team,
 		Role:        u.Role,
 		Status:      u.Status,
 		UserPicture: u.UserPicture,
@@ -49,6 +51,7 @@ func userEntities(u user.UserCore) User {
 		Fullname:    u.Fullname,
 		Email:       u.Email,
 		Password:    u.Password,
+		Team:        u.Team,
 		Role:        u.Role,
 		Status:      u.Status,
 		UserPicture: u.UserPicture,

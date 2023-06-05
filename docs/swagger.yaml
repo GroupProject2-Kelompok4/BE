@@ -82,7 +82,7 @@ paths:
               email: "peterzalai@gmail.com"
               password: "@Secret123"
               role: "user" 
-              team_id: 1
+              team: "people"
       responses:
         '201':
           $ref: '#/components/responses/Response201CreateUser'
@@ -913,7 +913,7 @@ components:
                 email: user1@gmail.com
                 team: Academic
                 role: People
-                image: user1.png
+                status: active
                 created_at: "2023/03/07"
                 updated_at: "2023/04/07"
               - no: 2
@@ -922,7 +922,7 @@ components:
                 email: user2@gmail.com
                 team: Academic
                 role: People
-                image: user2.png
+                status: non-active
                 created_at: "2023/03/20"
                 updated_at: "2023/04/07"
               - no: 3
@@ -931,7 +931,7 @@ components:
                 email: user3@gmail.com
                 team: Academic
                 role: People
-                image: user3.png
+                status: deleted
                 created_at: "2023/04/07"
                 updated_at: "2023/04/07"
             pagination:
@@ -1339,7 +1339,7 @@ components:
                 example: 500
               message:
                 type: string
-                example: "Internal Server Error"
+                example: "Internal server error"
 
   schemas:
     teams:
