@@ -34,7 +34,7 @@ func readEnv() *AppConfig {
 	}
 
 	if val, found := os.LookupEnv("DBPASSWORD"); found {
-		app.DBUSER = val
+		app.DBPASSWORD = val
 		isRead = false
 	}
 
