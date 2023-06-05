@@ -43,4 +43,4 @@ jobs:
           docker rm ${{ secrets.CNAME }}
           docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/immersive-dashboard:latest
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/immersive-dashboard:latest
-          docker run -d -p 8080:80 -e DBUSER=${{ secrets.DBUSER }} -e DBPASSWORD=${{ secrets.DBPASSWORD }} -e DBHOST=${{ secrets.DBHOST }} -e DBPORT=${{ secrets.DBPORT }} -e DBNAME=${{ secrets.DBNAME }} -e JWT=${{ secrets.JWT }} -e ADMINPASSWORD=${{ secrets.ADMINPASSWORD }} --name ${{ secrets.CNAME }} ${{ secrets.DOCKERHUB_USERNAME }}/immersive-dashboard:latest
+          docker run -d -p 80:8080 -e DBUSER=${{ secrets.DBUSER }} -e DBPASSWORD=${{ secrets.DBPASSWORD }} -e DBHOST=${{ secrets.DBHOST }} -e DBPORT=${{ secrets.DBPORT }} -e DBNAME=${{ secrets.DBNAME }} -e JWT=${{ secrets.JWT }} -e ADMINPASSWORD=${{ secrets.ADMINPASSWORD }} --name ${{ secrets.CNAME }} ${{ secrets.DOCKERHUB_USERNAME }}/immersive-dashboard:latest
