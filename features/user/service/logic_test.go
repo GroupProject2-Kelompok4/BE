@@ -198,3 +198,40 @@ func TestSearchUser(t *testing.T) {
 		data.AssertExpectations(t)
 	})
 }
+
+func TestProfile(t *testing.T) {
+	data := mocks.NewUserData(t)
+	result := user.UserCore{
+		UserID:   "550e8400-e29b-41d4-a716-446655440000",
+		Fullname: "admin",
+		Email:    "admin@mail.com"}
+	service := New(data)
+
+	t.Run("success get profile", func(t *testing.T) {
+		data.On("ProfileUser", "550e8400-e29b-41d4-a716-446655440000").Return(result, nil).Once()
+		res, err := service.ProfileUser("550e8400-e29b-41d4-a716-446655440000")
+		assert.Nil(t, err)
+		assert.Equal(t, result.UserID, res.UserID)
+		assert.Equal(t, result.Fullname, res.Fullname)
+		assert.Equal(t, result.Email, res.Email)
+		data.AssertExpectations(t)
+	})
+
+	t.Run("not found, error while retrieving user profile", func(t *testing.T) {
+		data.On("ProfileUser", "550e8400-e29b-41d4-a716-446655440000").Return(user.UserCore{}, errors.New("not found, error while retrieving user profile")).Once()
+		res, err := service.ProfileUser("550e8400-e29b-41d4-a716-446655440000")
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, err, "not found")
+		assert.Equal(t, user.UserCore{}, res)
+		data.AssertExpectations(t)
+	})
+
+	t.Run("internal server error", func(t *testing.T) {
+		data.On("ProfileUser", "550e8400-e29b-41d4-a716-446655440000").Return(user.UserCore{}, errors.New("internal server error")).Once()
+		res, err := service.ProfileUser("550e8400-e29b-41d4-a716-446655440000")
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, err, "internal server error")
+		assert.Equal(t, user.UserCore{}, res)
+		data.AssertExpectations(t)
+	})
+}

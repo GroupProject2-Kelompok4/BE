@@ -55,3 +55,27 @@ func searchUser(u user.UserCore) searchUserResponse {
 		UpdatedAt: helper.LocalTime(u.UpdatedAt),
 	}
 }
+
+type profileResponse struct {
+	UserID    string           `json:"user_id"`
+	Fullname  string           `json:"fullname"`
+	Email     string           `json:"email"`
+	Team      string           `json:"team"`
+	Role      string           `json:"role"`
+	Status    string           `json:"status"`
+	CreatedAt helper.LocalTime `json:"created_at"`
+	UpdatedAt helper.LocalTime `json:"updated_at"`
+}
+
+func profileUser(u user.UserCore) profileResponse {
+	return profileResponse{
+		UserID:    u.UserID,
+		Fullname:  u.Fullname,
+		Email:     u.Email,
+		Team:      u.Team,
+		Role:      u.Role,
+		Status:    u.Status,
+		CreatedAt: helper.LocalTime(u.CreatedAt),
+		UpdatedAt: helper.LocalTime(u.UpdatedAt),
+	}
+}
