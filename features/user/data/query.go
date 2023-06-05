@@ -92,7 +92,15 @@ func (uq *userQuery) Register(request user.UserCore) (user.UserCore, error) {
 func (uq *userQuery) SearchUser(keyword string, limit, offset int) ([]user.UserCore, uint, error) {
 	users := []User{}
 	var count int64
-	query := uq.db.Where("fullname LIKE ? OR email LIKE ? OR role LIKE ? OR status LIKE ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%").Where("is_deleted = 0").Limit(limit).Offset(offset).Find(&users).Count(&count)
+	query := uq.db.Table("users").
+		Where("fullname LIKE ? OR email LIKE ? OR role LIKE ? OR status LIKE ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%").
+		Where("is_deleted = 0").
+		Order("created_at ASC").
+		Limit(limit).
+		Offset(offset).
+		Find(&users).
+		Count(&count)
+
 	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
 		log.Sugar().Errorf("users with keyword %s not found.", keyword)
 		return nil, 0, errors.New("not found, error while retrieving list users")
@@ -145,6 +153,35 @@ func (uq *userQuery) DeactiveUser(userId string) error {
 
 // UpdateUserProfile implements user.UserData
 func (uq *userQuery) UpdateProfile(userId string, request user.UserCore) (user.UserCore, error) {
+	hashed, err := helper.HashPassword(request.Password)
+	if err != nil {
+		log.Error("error while hashing password")
+		return user.UserCore{}, errors.New("error while hashing password")
+	}
+
+	request.Password = hashed
+	req := userEntities(request)
+	query := uq.db.Table("users").Where("user_id = ? AND is_deleted = 0", userId).Updates(&req)
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
+		log.Error("user profile record not found")
+		return user.UserCore{}, errors.New("user profile record not found")
+	}
+
+	if query.RowsAffected == 0 {
+		log.Warn("no user has been created")
+		return user.UserCore{}, errors.New("row affected : 0")
+	}
+
+	if query.Error != nil {
+		log.Error("error while updating user")
+		return user.UserCore{}, errors.New("duplicate data entry")
+	}
+
+	return userModels(req), nil
+}
+
+// UpdateUserProfile implements user.UserData
+func (uq *userQuery) UpdateUserProfile(userId string, request user.UserCore) (user.UserCore, error) {
 	hashed, err := helper.HashPassword(request.Password)
 	if err != nil {
 		log.Error("error while hashing password")
