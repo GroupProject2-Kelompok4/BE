@@ -97,3 +97,15 @@ func (uq *userQuery) SearchUser(keyword string, limit, offset int) ([]user.UserC
 
 	return result, uint(count), nil
 }
+
+// ProfileUser implements user.UserData
+func (uq *userQuery) ProfileUser(userId string) (user.UserCore, error) {
+	users := User{}
+	query := uq.db.Raw("SELECT * FROM users WHERE user_id = ? AND is_deleted = 0", userId).Scan(&users)
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
+		log.Error("user profile record not found")
+		return user.UserCore{}, errors.New("user profile record not found")
+	}
+
+	return userModels(users), nil
+}

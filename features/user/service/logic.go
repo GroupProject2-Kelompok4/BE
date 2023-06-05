@@ -89,3 +89,18 @@ func (us *userService) SearchUser(keyword string, limit, offset int) ([]user.Use
 	}
 	return result, count, nil
 }
+
+// ProfileUser implements user.UserService
+func (us *userService) ProfileUser(userId string) (user.UserCore, error) {
+	result, err := us.query.ProfileUser(userId)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			log.Error("not found, error while retrieving user profile")
+			return user.UserCore{}, errors.New("not found, error while retrieving user profile")
+		} else {
+			log.Error("internal server error")
+			return user.UserCore{}, errors.New("internal server error")
+		}
+	}
+	return result, nil
+}

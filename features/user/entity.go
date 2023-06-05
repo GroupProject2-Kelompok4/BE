@@ -29,16 +29,19 @@ type UserHandler interface {
 	Login() echo.HandlerFunc
 	Register() echo.HandlerFunc
 	SearchUser() echo.HandlerFunc
+	ProfileUser() echo.HandlerFunc
 }
 
 type UserService interface {
 	Login(request UserCore) (UserCore, string, error)
 	Register(request UserCore) (UserCore, error)
 	SearchUser(keyword string, limit, offset int) ([]UserCore, uint, error)
+	ProfileUser(userId string) (UserCore, error)
 }
 
 type UserData interface {
 	Login(request UserCore) (UserCore, string, error)
 	Register(request UserCore) (UserCore, error)
 	SearchUser(keyword string, limit, offset int) ([]UserCore, uint, error)
+	ProfileUser(userId string) (UserCore, error)
 }
