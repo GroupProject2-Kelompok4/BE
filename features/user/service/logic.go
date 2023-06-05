@@ -104,3 +104,19 @@ func (us *userService) ProfileUser(userId string) (user.UserCore, error) {
 	}
 	return result, nil
 }
+
+// DeactiveUser implements user.UserService
+func (us *userService) DeactiveUser(userId string) error {
+	err := us.query.DeactiveUser(userId)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			log.Error("user profile record not found")
+			return errors.New("user profile record not found")
+		} else {
+			log.Error("internal server error")
+			return errors.New("internal server error")
+		}
+	}
+
+	return nil
+}

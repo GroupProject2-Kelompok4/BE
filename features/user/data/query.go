@@ -109,3 +109,28 @@ func (uq *userQuery) ProfileUser(userId string) (user.UserCore, error) {
 
 	return userModels(users), nil
 }
+
+// DeactiveUser implements user.UserData
+func (uq *userQuery) DeactiveUser(userId string) error {
+	query := uq.db.Table("users").Where("user_id = ? AND is_deleted = 0", userId).Updates(map[string]interface{}{
+		"is_deleted": true,
+		"status":     "deleted",
+	})
+
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
+		log.Error("user profile record not found")
+		return errors.New("user profile record not found")
+	}
+
+	if query.RowsAffected == 0 {
+		log.Warn("no user has been created")
+		return errors.New("row affected : 0")
+	}
+
+	if query.Error != nil {
+		log.Error("error while deactivate user")
+		return errors.New("duplicate data entry")
+	}
+
+	return nil
+}

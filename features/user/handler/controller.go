@@ -67,7 +67,7 @@ func (uh *userHandler) Register() echo.HandlerFunc {
 		request := RegisterRequest{}
 		_, role, errToken := middlewares.ExtractToken(c)
 		if errToken != nil {
-			c.Logger().Error("unauthorized access")
+			c.Logger().Error("missing or malformed JWT")
 			return c.JSON(http.StatusUnauthorized, helper.ResponseFormat(http.StatusUnauthorized, "Missing or Malformed JWT.", nil, nil))
 		}
 		if role != "admin" {
@@ -168,5 +168,31 @@ func (uh *userHandler) ProfileUser() echo.HandlerFunc {
 
 		resp := profileUser(user)
 		return c.JSON(http.StatusOK, helper.ResponseFormat(http.StatusOK, "Successfully operation.", resp, nil))
+	}
+}
+
+// DeactiveUser implements user.UserHandler
+func (uh *userHandler) DeactiveUser() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		_, role, errToken := middlewares.ExtractToken(c)
+		if errToken != nil {
+			c.Logger().Error("missing or malformed JWT")
+			return c.JSON(http.StatusUnauthorized, helper.ResponseFormat(http.StatusUnauthorized, "Missing or Malformed JWT.", nil, nil))
+		}
+		if role != "admin" {
+			c.Logger().Error("unauthorized access")
+			return c.JSON(http.StatusUnauthorized, helper.ResponseFormat(http.StatusUnauthorized, "Unauthorized access", nil, nil))
+		}
+
+		userId := c.Param("userId")
+		err := uh.service.DeactiveUser(userId)
+		if err != nil {
+			if strings.Contains(err.Error(), "not found") {
+				return c.JSON(http.StatusNotFound, helper.ResponseFormat(http.StatusNotFound, "The requested resource was not found", nil, nil))
+			}
+			return c.JSON(http.StatusInternalServerError, helper.ResponseFormat(http.StatusInternalServerError, "Internal Server Error", nil, nil))
+		}
+
+		return c.JSON(http.StatusOK, helper.ResponseFormat(http.StatusCreated, "Successfully deleted an account", nil, nil))
 	}
 }

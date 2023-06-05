@@ -30,6 +30,7 @@ type UserHandler interface {
 	Register() echo.HandlerFunc
 	SearchUser() echo.HandlerFunc
 	ProfileUser() echo.HandlerFunc
+	DeactiveUser() echo.HandlerFunc
 }
 
 type UserService interface {
@@ -37,6 +38,7 @@ type UserService interface {
 	Register(request UserCore) (UserCore, error)
 	SearchUser(keyword string, limit, offset int) ([]UserCore, uint, error)
 	ProfileUser(userId string) (UserCore, error)
+	DeactiveUser(userId string) error
 }
 
 type UserData interface {
@@ -44,4 +46,5 @@ type UserData interface {
 	Register(request UserCore) (UserCore, error)
 	SearchUser(keyword string, limit, offset int) ([]UserCore, uint, error)
 	ProfileUser(userId string) (UserCore, error)
+	DeactiveUser(userId string) error
 }
