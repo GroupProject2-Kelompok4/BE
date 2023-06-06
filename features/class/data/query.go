@@ -60,6 +60,7 @@ func (cq *classQuery) ListClasses(limit int, offset int) ([]class.ClassCore, uin
 	users := []User{}
 	var count int64
 	query := cq.db.Table("classes").
+		Where("is_deleted = 0").
 		Order("created_at ASC").
 		Limit(limit).
 		Offset(offset).
@@ -85,4 +86,28 @@ func (cq *classQuery) ListClasses(limit int, offset int) ([]class.ClassCore, uin
 	}
 
 	return result, uint(count), nil
+}
+
+// DeleteClass implements class.ClassData
+func (cq *classQuery) DeleteClass(classId string) error {
+	query := cq.db.Table("classes").
+		Where("class_id = ? AND is_deleted = 0", classId).
+		Updates(map[string]interface{}{"is_deleted": true})
+
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
+		log.Error("class record not found")
+		return errors.New("class record not found")
+	}
+
+	if query.RowsAffected == 0 {
+		log.Warn("no class has been created")
+		return errors.New("row affected : 0")
+	}
+
+	if query.Error != nil {
+		log.Error("error while delete class")
+		return errors.New("duplicate data entry")
+	}
+
+	return nil
 }

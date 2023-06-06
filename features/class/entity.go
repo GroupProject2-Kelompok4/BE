@@ -15,6 +15,7 @@ type ClassCore struct {
 	GraduateDate time.Time
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
+	IsDeleted    bool
 	UserID       string
 	PIC          string
 	Mentees      []mentee.MenteeCore
@@ -23,14 +24,17 @@ type ClassCore struct {
 type ClassHandler interface {
 	RegisterClass() echo.HandlerFunc
 	ListClasses() echo.HandlerFunc
+	DeleteClass() echo.HandlerFunc
 }
 
 type ClassService interface {
 	RegisterClass(request ClassCore) (ClassCore, string, error)
 	ListClasses(limit, offset int) ([]ClassCore, uint, error)
+	DeleteClass(classId string) error
 }
 
 type ClassData interface {
 	RegisterClass(request ClassCore) (ClassCore, string, error)
 	ListClasses(limit, offset int) ([]ClassCore, uint, error)
+	DeleteClass(classId string) error
 }

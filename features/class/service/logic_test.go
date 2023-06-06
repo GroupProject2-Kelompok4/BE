@@ -129,3 +129,31 @@ func TestListClasses(t *testing.T) {
 	})
 
 }
+
+func TestDeleteClass(t *testing.T) {
+	data := mocks.NewClassData(t)
+	service := New(data)
+
+	t.Run("success deactivate an account", func(t *testing.T) {
+		data.On("DeleteClass", "550e8400-e29b-41d4-a716-446655440000").Return(nil).Once()
+		err := service.DeleteClass("550e8400-e29b-41d4-a716-446655440000")
+		assert.Nil(t, err)
+		data.AssertExpectations(t)
+	})
+
+	t.Run("user profile record not found", func(t *testing.T) {
+		data.On("DeleteClass", "550e8400-e29b-41d4-a716-446655440000").Return(errors.New("user profile record not found")).Once()
+		err := service.DeleteClass("550e8400-e29b-41d4-a716-446655440000")
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, err, "user profile record not found")
+		data.AssertExpectations(t)
+	})
+
+	t.Run("internal server error", func(t *testing.T) {
+		data.On("DeleteClass", "550e8400-e29b-41d4-a716-446655440000").Return(errors.New("internal server error")).Once()
+		err := service.DeleteClass("550e8400-e29b-41d4-a716-446655440000")
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, err, "internal server error")
+		data.AssertExpectations(t)
+	})
+}

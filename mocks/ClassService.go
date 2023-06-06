@@ -12,6 +12,20 @@ type ClassService struct {
 	mock.Mock
 }
 
+// DeleteClass provides a mock function with given fields: classId
+func (_m *ClassService) DeleteClass(classId string) error {
+	ret := _m.Called(classId)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(classId)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // ListClasses provides a mock function with given fields: limit, offset
 func (_m *ClassService) ListClasses(limit int, offset int) ([]class.ClassCore, uint, error) {
 	ret := _m.Called(limit, offset)
