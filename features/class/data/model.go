@@ -46,6 +46,7 @@ func classModels(c Class) class.ClassCore {
 		UpdatedAt:    c.UpdatedAt,
 		IsDeleted:    c.IsDeleted,
 		UserID:       c.UserID,
+		PIC:          c.User.Fullname,
 	}
 }
 
@@ -61,23 +62,4 @@ func classEntities(c class.ClassCore) Class {
 		IsDeleted:    c.IsDeleted,
 		UserID:       c.UserID,
 	}
-}
-
-func getFullname(users []User, userID string) string {
-	for _, user := range users {
-		if user.UserID == userID {
-			return user.Fullname
-		}
-	}
-	return ""
-}
-
-func keys(m map[string]bool) []string {
-	keys := make([]string, len(m))
-	i := 0
-	for k := range m {
-		keys[i] = k
-		i++
-	}
-	return keys
 }

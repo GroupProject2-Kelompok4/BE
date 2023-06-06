@@ -141,11 +141,11 @@ func TestDeleteClass(t *testing.T) {
 		data.AssertExpectations(t)
 	})
 
-	t.Run("user profile record not found", func(t *testing.T) {
-		data.On("DeleteClass", "550e8400-e29b-41d4-a716-446655440000").Return(errors.New("user profile record not found")).Once()
+	t.Run("class record not found", func(t *testing.T) {
+		data.On("DeleteClass", "550e8400-e29b-41d4-a716-446655440000").Return(errors.New("class record not found")).Once()
 		err := service.DeleteClass("550e8400-e29b-41d4-a716-446655440000")
 		assert.NotNil(t, err)
-		assert.ErrorContains(t, err, "user profile record not found")
+		assert.ErrorContains(t, err, "class record not found")
 		data.AssertExpectations(t)
 	})
 
@@ -154,6 +154,49 @@ func TestDeleteClass(t *testing.T) {
 		err := service.DeleteClass("550e8400-e29b-41d4-a716-446655440000")
 		assert.NotNil(t, err)
 		assert.ErrorContains(t, err, "internal server error")
+		data.AssertExpectations(t)
+	})
+}
+
+func TestGetClass(t *testing.T) {
+	data := mocks.NewClassData(t)
+	result := class.ClassCore{
+		ClassID:      "550e8400-e29b-41d4-a716-446655440000",
+		Name:         "BE 17",
+		StartDate:    time.Date(2023, 5, 17, 0, 0, 0, 0, time.UTC),
+		GraduateDate: time.Date(2023, 5, 17, 0, 0, 0, 0, time.UTC),
+		CreatedAt:    time.Date(2023, 5, 17, 0, 0, 0, 0, time.UTC),
+		UpdatedAt:    time.Date(2023, 5, 17, 0, 0, 0, 0, time.UTC),
+		UserID:       "65d8040e-03ae-11ee-88e5-e8fb1c216033",
+		PIC:          "user1",
+	}
+	service := New(data)
+
+	t.Run("success get profile", func(t *testing.T) {
+		data.On("GetClass", "550e8400-e29b-41d4-a716-446655440000").Return(result, nil).Once()
+		res, err := service.GetClass("550e8400-e29b-41d4-a716-446655440000")
+		assert.Nil(t, err)
+		assert.Equal(t, result.ClassID, res.ClassID)
+		assert.Equal(t, result.Name, res.Name)
+		assert.Equal(t, result.PIC, res.PIC)
+		data.AssertExpectations(t)
+	})
+
+	t.Run("not found, error while retrieving class", func(t *testing.T) {
+		data.On("GetClass", "550e8400-e29b-41d4-a716-446655440000").Return(class.ClassCore{}, errors.New("not found, error while retrieving class")).Once()
+		res, err := service.GetClass("550e8400-e29b-41d4-a716-446655440000")
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, err, "not found")
+		assert.Equal(t, class.ClassCore{}, res)
+		data.AssertExpectations(t)
+	})
+
+	t.Run("internal server error", func(t *testing.T) {
+		data.On("GetClass", "550e8400-e29b-41d4-a716-446655440000").Return(class.ClassCore{}, errors.New("internal server error")).Once()
+		res, err := service.GetClass("550e8400-e29b-41d4-a716-446655440000")
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, err, "internal server error")
+		assert.Equal(t, class.ClassCore{}, res)
 		data.AssertExpectations(t)
 	})
 }

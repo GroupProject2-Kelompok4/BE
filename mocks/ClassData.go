@@ -26,6 +26,30 @@ func (_m *ClassData) DeleteClass(classId string) error {
 	return r0
 }
 
+// GetClass provides a mock function with given fields: classId
+func (_m *ClassData) GetClass(classId string) (class.ClassCore, error) {
+	ret := _m.Called(classId)
+
+	var r0 class.ClassCore
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (class.ClassCore, error)); ok {
+		return rf(classId)
+	}
+	if rf, ok := ret.Get(0).(func(string) class.ClassCore); ok {
+		r0 = rf(classId)
+	} else {
+		r0 = ret.Get(0).(class.ClassCore)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(classId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // ListClasses provides a mock function with given fields: limit, offset
 func (_m *ClassData) ListClasses(limit int, offset int) ([]class.ClassCore, uint, error) {
 	ret := _m.Called(limit, offset)

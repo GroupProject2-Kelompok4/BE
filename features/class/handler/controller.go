@@ -123,3 +123,25 @@ func (ch *classHandler) DeleteClass() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, helper.ResponseFormat(http.StatusCreated, "Successfully deleted a class", nil, nil))
 	}
 }
+
+// GetClass implements class.ClassHandler
+func (ch *classHandler) GetClass() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		_, _, err := middlewares.ExtractToken(c)
+		if err != nil {
+			return c.JSON(http.StatusUnauthorized, helper.ResponseFormat(http.StatusUnauthorized, "Missing or Malformed JWT.", nil, nil))
+		}
+
+		classId := c.Param("id")
+		class, err := ch.service.GetClass(classId)
+		if err != nil {
+			if strings.Contains(err.Error(), "not found") {
+				return c.JSON(http.StatusNotFound, helper.ResponseFormat(http.StatusNotFound, "The requested resource was not found", nil, nil))
+			}
+			return c.JSON(http.StatusInternalServerError, helper.ResponseFormat(http.StatusInternalServerError, "Internal server error", nil, nil))
+		}
+
+		resp := getClass(class)
+		return c.JSON(http.StatusOK, helper.ResponseFormat(http.StatusOK, "Successfully operation.", resp, nil))
+	}
+}
