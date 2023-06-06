@@ -139,51 +139,31 @@ func (_m *UserData) SearchUser(keyword string, limit int, offset int) ([]user.Us
 }
 
 // UpdateProfile provides a mock function with given fields: userId, request
-func (_m *UserData) UpdateProfile(userId string, request user.UserCore) (user.UserCore, error) {
+func (_m *UserData) UpdateProfile(userId string, request user.UserCore) error {
 	ret := _m.Called(userId, request)
 
-	var r0 user.UserCore
-	var r1 error
-	if rf, ok := ret.Get(0).(func(string, user.UserCore) (user.UserCore, error)); ok {
-		return rf(userId, request)
-	}
-	if rf, ok := ret.Get(0).(func(string, user.UserCore) user.UserCore); ok {
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, user.UserCore) error); ok {
 		r0 = rf(userId, request)
 	} else {
-		r0 = ret.Get(0).(user.UserCore)
+		r0 = ret.Error(0)
 	}
 
-	if rf, ok := ret.Get(1).(func(string, user.UserCore) error); ok {
-		r1 = rf(userId, request)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
+	return r0
 }
 
 // UpdateUserProfile provides a mock function with given fields: userId, request
-func (_m *UserData) UpdateUserProfile(userId string, request user.UserCore) (user.UserCore, error) {
+func (_m *UserData) UpdateUserProfile(userId string, request user.UserCore) error {
 	ret := _m.Called(userId, request)
 
-	var r0 user.UserCore
-	var r1 error
-	if rf, ok := ret.Get(0).(func(string, user.UserCore) (user.UserCore, error)); ok {
-		return rf(userId, request)
-	}
-	if rf, ok := ret.Get(0).(func(string, user.UserCore) user.UserCore); ok {
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, user.UserCore) error); ok {
 		r0 = rf(userId, request)
 	} else {
-		r0 = ret.Get(0).(user.UserCore)
+		r0 = ret.Error(0)
 	}
 
-	if rf, ok := ret.Get(1).(func(string, user.UserCore) error); ok {
-		r1 = rf(userId, request)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
+	return r0
 }
 
 type mockConstructorTestingTNewUserData interface {
