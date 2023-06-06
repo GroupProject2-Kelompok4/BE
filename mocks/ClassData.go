@@ -12,6 +12,39 @@ type ClassData struct {
 	mock.Mock
 }
 
+// ListClasses provides a mock function with given fields: limit, offset
+func (_m *ClassData) ListClasses(limit int, offset int) ([]class.ClassCore, uint, error) {
+	ret := _m.Called(limit, offset)
+
+	var r0 []class.ClassCore
+	var r1 uint
+	var r2 error
+	if rf, ok := ret.Get(0).(func(int, int) ([]class.ClassCore, uint, error)); ok {
+		return rf(limit, offset)
+	}
+	if rf, ok := ret.Get(0).(func(int, int) []class.ClassCore); ok {
+		r0 = rf(limit, offset)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]class.ClassCore)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(int, int) uint); ok {
+		r1 = rf(limit, offset)
+	} else {
+		r1 = ret.Get(1).(uint)
+	}
+
+	if rf, ok := ret.Get(2).(func(int, int) error); ok {
+		r2 = rf(limit, offset)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
 // RegisterClass provides a mock function with given fields: request
 func (_m *ClassData) RegisterClass(request class.ClassCore) (class.ClassCore, string, error) {
 	ret := _m.Called(request)

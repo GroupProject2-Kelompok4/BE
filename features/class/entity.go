@@ -8,6 +8,7 @@ import (
 )
 
 type ClassCore struct {
+	No           uint
 	ClassID      string
 	Name         string
 	StartDate    time.Time
@@ -21,12 +22,15 @@ type ClassCore struct {
 
 type ClassHandler interface {
 	RegisterClass() echo.HandlerFunc
+	ListClasses() echo.HandlerFunc
 }
 
 type ClassService interface {
 	RegisterClass(request ClassCore) (ClassCore, string, error)
+	ListClasses(limit, offset int) ([]ClassCore, uint, error)
 }
 
 type ClassData interface {
 	RegisterClass(request ClassCore) (ClassCore, string, error)
+	ListClasses(limit, offset int) ([]ClassCore, uint, error)
 }

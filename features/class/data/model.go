@@ -15,7 +15,23 @@ type Class struct {
 	CreatedAt    time.Time       `gorm:"type:datetime"`
 	UpdatedAt    time.Time       `gorm:"type:datetime"`
 	UserID       string          `gorm:"type:varchar(50)"`
+	Users        User            `gorm:"foreignKey:UserID"`
 	Mentees      []mentee.Mentee `gorm:"foreignKey:ClassID"`
+}
+
+type User struct {
+	UserID      string `gorm:"primaryKey;type:varchar(50)"`
+	Fullname    string `gorm:"type:varchar(100);not null;unique"`
+	Email       string `gorm:"type:varchar(100);not null;unique"`
+	Password    string
+	Team        string `gorm:"type:enum('manager', 'mentor', 'team people skill', 'team placement'); default:'mentor'"`
+	Role        string `gorm:"type:enum('admin', 'user'); default:'user'"`
+	Status      string `gorm:"type:enum('active', 'non-active', 'deleted'); default:'active'"`
+	UserPicture string
+	CreatedAt   time.Time `gorm:"type:datetime"`
+	UpdatedAt   time.Time `gorm:"type:datetime"`
+	IsDeleted   bool      `gorm:"type:boolean"`
+	Classes     []Class   `gorm:"foreignKey:UserID"`
 }
 
 // Class-model to class-core
@@ -42,4 +58,23 @@ func classEntities(c class.ClassCore) Class {
 		UpdatedAt:    c.UpdatedAt,
 		UserID:       c.UserID,
 	}
+}
+
+func getFullname(users []User, userID string) string {
+	for _, user := range users {
+		if user.UserID == userID {
+			return user.Fullname
+		}
+	}
+	return ""
+}
+
+func keys(m map[string]bool) []string {
+	keys := make([]string, len(m))
+	i := 0
+	for k := range m {
+		keys[i] = k
+		i++
+	}
+	return keys
 }

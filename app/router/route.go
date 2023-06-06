@@ -44,4 +44,5 @@ func initClassRouter(db *gorm.DB, e *echo.Echo) {
 	classHandler := ch.New(classService)
 
 	e.POST("/classes", classHandler.RegisterClass(), middlewares.JWTMiddleware())
+	e.GET("/classes", classHandler.ListClasses(), middlewares.JWTMiddleware())
 }

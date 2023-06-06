@@ -42,3 +42,18 @@ func (cs *classService) RegisterClass(request class.ClassCore) (class.ClassCore,
 
 	return result, pic, nil
 }
+
+// ListClasses implements class.ClassService
+func (cs *classService) ListClasses(limit int, offset int) ([]class.ClassCore, uint, error) {
+	result, count, err := cs.query.ListClasses(limit, offset)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			log.Error("not found, error while retreiving list classes")
+			return []class.ClassCore{}, 0, errors.New("not found, error while retreiving list classes")
+		} else {
+			log.Error("internal server error")
+			return []class.ClassCore{}, 0, errors.New("internal server error")
+		}
+	}
+	return result, count, nil
+}
