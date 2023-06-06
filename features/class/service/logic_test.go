@@ -200,3 +200,65 @@ func TestGetClass(t *testing.T) {
 		data.AssertExpectations(t)
 	})
 }
+
+func TestUpdateProfile(t *testing.T) {
+	data := mocks.NewClassData(t)
+	arguments := class.ClassCore{
+		Name:         "BE 17",
+		PIC:          "550e8400-ffff-41d4-a716-446655440000",
+		StartDate:    time.Date(2023, 5, 17, 0, 0, 0, 0, time.UTC),
+		GraduateDate: time.Date(2023, 5, 17, 0, 0, 0, 0, time.UTC),
+	}
+	result := class.ClassCore{
+		ClassID:      "550e8400-e29b-41d4-a716-446655440000",
+		Name:         "BE 17",
+		PIC:          "550e8400-ffff-41d4-a716-446655440000",
+		StartDate:    time.Date(2023, 5, 17, 0, 0, 0, 0, time.UTC),
+		GraduateDate: time.Date(2023, 5, 17, 0, 0, 0, 0, time.UTC),
+	}
+	service := New(data)
+
+	t.Run("request cannot be empty", func(t *testing.T) {
+		request := class.ClassCore{
+			ClassID: "",
+			Name:    "",
+			PIC:     "",
+		}
+		err := service.UpdateClass("550e8400-e29b-41d4-a716-446655440000", request)
+		expectedErr := errors.New("request cannot be empty")
+		assert.NotNil(t, err)
+		assert.EqualError(t, err, expectedErr.Error(), "Expected error message does not match")
+		data.AssertExpectations(t)
+	})
+
+	t.Run("success update account", func(t *testing.T) {
+		data.On("UpdateProfile", mock.Anything).Return(result, nil).Once()
+		err := service.UpdateClass("550e8400-e29b-41d4-a716-446655440000", arguments)
+		assert.Nil(t, err)
+		data.AssertExpectations(t)
+	})
+
+	t.Run("class record not found", func(t *testing.T) {
+		data.On("UpdateProfile", "550e8400-e29b-41d4-a716-446655440000").Return(errors.New("class record not found")).Once()
+		err := service.UpdateClass("550e8400-e29b-41d4-a716-446655440000", arguments)
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, err, "class record not found")
+		data.AssertExpectations(t)
+	})
+
+	t.Run("failed to update class, duplicate data entry", func(t *testing.T) {
+		data.On("UpdateProfile", "550e8400-e29b-41d4-a716-446655440000", arguments).Return(errors.New("failed to update class, duplicate data entry")).Once()
+		err := service.UpdateClass("550e8400-e29b-41d4-a716-446655440000", arguments)
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, err, "duplicated")
+		data.AssertExpectations(t)
+	})
+
+	t.Run("internal server error", func(t *testing.T) {
+		data.On("UpdateProfile", "550e8400-e29b-41d4-a716-446655440000").Return(errors.New("internal server error")).Once()
+		err := service.UpdateClass("550e8400-e29b-41d4-a716-446655440000", arguments)
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, err, "internal server error")
+		data.AssertExpectations(t)
+	})
+}
