@@ -41,8 +41,8 @@ type UserService interface {
 	SearchUser(keyword string, limit, offset int) ([]UserCore, uint, error)
 	ProfileUser(userId string) (UserCore, error)
 	DeactiveUser(userId string) error
-	UpdateProfile(userId string, request UserCore) (UserCore, error)
-	UpdateUserProfile(userId string, request UserCore) (UserCore, error)
+	UpdateProfile(userId string, request UserCore) error
+	UpdateUserProfile(userId string, request UserCore) error
 }
 
 type UserData interface {
@@ -51,6 +51,6 @@ type UserData interface {
 	SearchUser(keyword string, limit, offset int) ([]UserCore, uint, error)
 	ProfileUser(userId string) (UserCore, error)
 	DeactiveUser(userId string) error
-	UpdateProfile(userId string, request UserCore) (UserCore, error)
-	UpdateUserProfile(userId string, request UserCore) (UserCore, error)
+	UpdateProfile(userId string, request UserCore) error
+	UpdateUserProfile(userId string, request UserCore) error
 }

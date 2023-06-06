@@ -213,7 +213,7 @@ func (uh *userHandler) UpdateProfile() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
 		}
 
-		result, err := uh.service.UpdateProfile(userId, RequestToCore(&request))
+		err := uh.service.UpdateProfile(userId, RequestToCore(&request))
 		if err != nil {
 			if strings.Contains(err.Error(), "empty") {
 				return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
@@ -226,8 +226,7 @@ func (uh *userHandler) UpdateProfile() echo.HandlerFunc {
 			}
 		}
 
-		resp := updateUserProfile(result)
-		return c.JSON(http.StatusCreated, helper.ResponseFormat(http.StatusCreated, "Successfully updated an account.", resp, nil))
+		return c.JSON(http.StatusCreated, helper.ResponseFormat(http.StatusCreated, "Successfully updated an account.", nil, nil))
 	}
 }
 
@@ -252,7 +251,7 @@ func (uh *userHandler) UpdateUserProfile() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
 		}
 
-		result, err := uh.service.UpdateProfile(userId, RequestToCore(&request))
+		err := uh.service.UpdateProfile(userId, RequestToCore(&request))
 		if err != nil {
 			if strings.Contains(err.Error(), "empty") {
 				return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
@@ -265,7 +264,6 @@ func (uh *userHandler) UpdateUserProfile() echo.HandlerFunc {
 			}
 		}
 
-		resp := updateUserProfile(result)
-		return c.JSON(http.StatusCreated, helper.ResponseFormat(http.StatusCreated, "Successfully updated an account.", resp, nil))
+		return c.JSON(http.StatusCreated, helper.ResponseFormat(http.StatusCreated, "Successfully updated an account.", nil, nil))
 	}
 }

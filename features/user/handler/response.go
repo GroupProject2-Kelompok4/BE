@@ -79,25 +79,3 @@ func profileUser(u user.UserCore) profileResponse {
 		UpdatedAt: helper.LocalTime(u.UpdatedAt),
 	}
 }
-
-type updateResponse struct {
-	Fullname  string           `json:"fullname"`
-	Email     string           `json:"email"`
-	Team      string           `json:"team"`
-	Role      string           `json:"role"`
-	Status    string           `json:"status"`
-	CreatedAt helper.LocalTime `json:"created_at"`
-	UpdatedAt helper.LocalTime `json:"updated_at"`
-}
-
-func updateUserProfile(u user.UserCore) updateResponse {
-	return updateResponse{
-		Fullname:  u.Fullname,
-		Email:     u.Email,
-		Team:      u.Team,
-		Role:      u.Role,
-		Status:    u.Status,
-		CreatedAt: helper.LocalTime(u.CreatedAt),
-		UpdatedAt: helper.LocalTime(u.UpdatedAt),
-	}
-}
