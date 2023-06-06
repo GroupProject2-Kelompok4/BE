@@ -14,8 +14,9 @@ type Class struct {
 	GraduateDate time.Time       `gorm:"type:date"`
 	CreatedAt    time.Time       `gorm:"type:datetime"`
 	UpdatedAt    time.Time       `gorm:"type:datetime"`
+	IsDeleted    bool            `gorm:"type:boolean"`
 	UserID       string          `gorm:"type:varchar(50)"`
-	Users        User            `gorm:"foreignKey:UserID"`
+	User         User            `gorm:"references:UserID"`
 	Mentees      []mentee.Mentee `gorm:"foreignKey:ClassID"`
 }
 
@@ -43,6 +44,7 @@ func classModels(c Class) class.ClassCore {
 		GraduateDate: c.GraduateDate,
 		CreatedAt:    c.CreatedAt,
 		UpdatedAt:    c.UpdatedAt,
+		IsDeleted:    c.IsDeleted,
 		UserID:       c.UserID,
 	}
 }
@@ -56,6 +58,7 @@ func classEntities(c class.ClassCore) Class {
 		GraduateDate: c.GraduateDate,
 		CreatedAt:    c.CreatedAt,
 		UpdatedAt:    c.UpdatedAt,
+		IsDeleted:    c.IsDeleted,
 		UserID:       c.UserID,
 	}
 }

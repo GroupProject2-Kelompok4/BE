@@ -57,3 +57,19 @@ func (cs *classService) ListClasses(limit int, offset int) ([]class.ClassCore, u
 	}
 	return result, count, nil
 }
+
+// DeleteClass implements class.ClassService
+func (cs *classService) DeleteClass(classId string) error {
+	err := cs.query.DeleteClass(classId)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			log.Error("user profile record not found")
+			return errors.New("user profile record not found")
+		} else {
+			log.Error("internal server error")
+			return errors.New("internal server error")
+		}
+	}
+
+	return nil
+}
