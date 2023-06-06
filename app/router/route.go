@@ -4,6 +4,9 @@ import (
 	cd "github.com/GroupProject2-Kelompok4/BE/features/class/data"
 	ch "github.com/GroupProject2-Kelompok4/BE/features/class/handler"
 	cs "github.com/GroupProject2-Kelompok4/BE/features/class/service"
+	md "github.com/GroupProject2-Kelompok4/BE/features/mentee/data"
+	mh "github.com/GroupProject2-Kelompok4/BE/features/mentee/handler"
+	ms "github.com/GroupProject2-Kelompok4/BE/features/mentee/service"
 	ud "github.com/GroupProject2-Kelompok4/BE/features/user/data"
 	uh "github.com/GroupProject2-Kelompok4/BE/features/user/handler"
 	us "github.com/GroupProject2-Kelompok4/BE/features/user/service"
@@ -22,6 +25,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 
 	initUserRouter(db, e)
 	initClassRouter(db, e)
+	initMenteeRouter(db, e)
 }
 
 func initUserRouter(db *gorm.DB, e *echo.Echo) {
@@ -48,4 +52,12 @@ func initClassRouter(db *gorm.DB, e *echo.Echo) {
 	e.GET("/classes/:id", classHandler.GetClass(), middlewares.JWTMiddleware())
 	e.DELETE("/classes/:id", classHandler.DeleteClass(), middlewares.JWTMiddleware())
 	e.PUT("/classes/:id", classHandler.UpdateClass(), middlewares.JWTMiddleware())
+}
+
+func initMenteeRouter(db *gorm.DB, e *echo.Echo) {
+	menteeData := md.New(db)
+	menteeService := ms.New(menteeData)
+	menteeHandler := mh.New(menteeService)
+
+	e.POST("/mentees", menteeHandler.RegisterMentee(), middlewares.JWTMiddleware())
 }
