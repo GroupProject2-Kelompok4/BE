@@ -33,7 +33,7 @@ func (ch *classHandler) RegisterClass() echo.HandlerFunc {
 
 		errBind := c.Bind(&request)
 		if errBind != nil {
-			c.Logger().Error("error on bind login input")
+			c.Logger().Error("error on bind input")
 			return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
 		}
 
@@ -51,7 +51,7 @@ func (ch *classHandler) RegisterClass() echo.HandlerFunc {
 		}
 
 		resp := registerClass(result, pic)
-		return c.JSON(http.StatusCreated, helper.ResponseFormat(http.StatusCreated, "Successfully created a class", resp, nil))
+		return c.JSON(http.StatusCreated, helper.ResponseFormat(http.StatusCreated, "Successfully created new class", resp, nil))
 	}
 }
 
@@ -159,7 +159,7 @@ func (ch *classHandler) UpdateClass() echo.HandlerFunc {
 		classId := c.Param("id")
 		errBind := c.Bind(&request)
 		if errBind != nil {
-			c.Logger().Error("error on bind login input")
+			c.Logger().Error("error on bind input")
 			return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
 		}
 
