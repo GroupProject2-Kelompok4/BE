@@ -16,6 +16,13 @@ type RegisterClassRequest struct {
 	GraduateDate string `json:"graduate_date" form:"graduate_date"`
 }
 
+type UpdateClassRequest struct {
+	Name         *string `json:"name" form:"name"`
+	UserID       *string `json:"pic" form:"pic"`
+	StartDate    *string `json:"start_date" form:"start_date"`
+	GraduateDate *string `json:"graduate_date" form:"graduate_date"`
+}
+
 func RequestToCore(data interface{}) class.ClassCore {
 	res := class.ClassCore{}
 	switch v := data.(type) {
@@ -35,7 +42,29 @@ func RequestToCore(data interface{}) class.ClassCore {
 			return class.ClassCore{}
 		}
 		res.GraduateDate = graduateDate
-
+	case *UpdateClassRequest:
+		if v.Name != nil {
+			res.Name = *v.Name
+		}
+		if v.UserID != nil {
+			res.UserID = *v.UserID
+		}
+		if v.StartDate != nil {
+			startDate, err := time.ParseInLocation("2006-01-02", *v.StartDate, time.Local)
+			if err != nil {
+				log.Error("error while parsing string to time format")
+				return class.ClassCore{}
+			}
+			res.StartDate = startDate
+		}
+		if v.GraduateDate != nil {
+			graduateDate, err := time.ParseInLocation("2006-01-02", *v.GraduateDate, time.Local)
+			if err != nil {
+				log.Error("error while parsing string to time format")
+				return class.ClassCore{}
+			}
+			res.GraduateDate = graduateDate
+		}
 	default:
 		return class.ClassCore{}
 	}

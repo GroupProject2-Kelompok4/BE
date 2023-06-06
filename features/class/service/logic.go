@@ -88,3 +88,27 @@ func (cs *classService) GetClass(classId string) (class.ClassCore, error) {
 	}
 	return result, nil
 }
+
+// UpdateClass implements class.ClassService
+func (cs *classService) UpdateClass(classId string, request class.ClassCore) error {
+	if request.Name == "" && request.UserID == "" && request.StartDate.IsZero() && request.GraduateDate.IsZero() {
+		log.Error("request cannot be empty")
+		return errors.New("request cannot be empty")
+	}
+
+	err := cs.query.UpdateClass(classId, request)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			log.Error("class record not found")
+			return errors.New("class record not found")
+		} else if strings.Contains(err.Error(), "duplicate data entry") {
+			log.Error("failed to update class, duplicate data entry")
+			return errors.New("failed to update class, duplicate data entry")
+		} else {
+			log.Error("internal server error")
+			return errors.New("internal server error")
+		}
+	}
+
+	return nil
+}

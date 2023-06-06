@@ -114,6 +114,20 @@ func (_m *ClassData) RegisterClass(request class.ClassCore) (class.ClassCore, st
 	return r0, r1, r2
 }
 
+// UpdateClass provides a mock function with given fields: classId, request
+func (_m *ClassData) UpdateClass(classId string, request class.ClassCore) error {
+	ret := _m.Called(classId, request)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, class.ClassCore) error); ok {
+		r0 = rf(classId, request)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 type mockConstructorTestingTNewClassData interface {
 	mock.TestingT
 	Cleanup(func())

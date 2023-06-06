@@ -26,6 +26,7 @@ type ClassHandler interface {
 	ListClasses() echo.HandlerFunc
 	DeleteClass() echo.HandlerFunc
 	GetClass() echo.HandlerFunc
+	UpdateClass() echo.HandlerFunc
 }
 
 type ClassService interface {
@@ -33,6 +34,7 @@ type ClassService interface {
 	ListClasses(limit, offset int) ([]ClassCore, uint, error)
 	DeleteClass(classId string) error
 	GetClass(classId string) (ClassCore, error)
+	UpdateClass(classId string, request ClassCore) error
 }
 
 type ClassData interface {
@@ -40,4 +42,5 @@ type ClassData interface {
 	ListClasses(limit, offset int) ([]ClassCore, uint, error)
 	DeleteClass(classId string) error
 	GetClass(classId string) (ClassCore, error)
+	UpdateClass(classId string, request ClassCore) error
 }

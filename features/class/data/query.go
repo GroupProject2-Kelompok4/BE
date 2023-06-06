@@ -107,7 +107,7 @@ func (cq *classQuery) DeleteClass(classId string) error {
 // GetClass implements class.ClassData
 func (cq *classQuery) GetClass(classId string) (class.ClassCore, error) {
 	cls := Class{}
-	query := cq.db.Where("class_id = ?", classId).Preload("User").First(&cls)
+	query := cq.db.Where("class_id = ? AND is_deleted = 0", classId).Preload("User").First(&cls)
 	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
 		log.Error("list classes not found")
 		return class.ClassCore{}, errors.New("not found, error while retrieving list classes")
@@ -124,4 +124,26 @@ func (cq *classQuery) GetClass(classId string) (class.ClassCore, error) {
 	}
 
 	return classModels(cls), nil
+}
+
+// UpdateClass implements class.ClassData
+func (cq *classQuery) UpdateClass(classId string, request class.ClassCore) error {
+	req := classEntities(request)
+	query := cq.db.Table("classes").Where("class_id = ? AND is_deleted = 0", classId).Updates(&req)
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
+		log.Error("user profile record not found")
+		return errors.New("user profile record not found")
+	}
+
+	if query.RowsAffected == 0 {
+		log.Warn("no user has been created")
+		return errors.New("row affected : 0")
+	}
+
+	if query.Error != nil {
+		log.Error("error while updating user")
+		return errors.New("duplicate data entry")
+	}
+
+	return nil
 }
