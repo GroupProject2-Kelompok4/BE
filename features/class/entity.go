@@ -25,16 +25,19 @@ type ClassHandler interface {
 	RegisterClass() echo.HandlerFunc
 	ListClasses() echo.HandlerFunc
 	DeleteClass() echo.HandlerFunc
+	GetClass() echo.HandlerFunc
 }
 
 type ClassService interface {
 	RegisterClass(request ClassCore) (ClassCore, string, error)
 	ListClasses(limit, offset int) ([]ClassCore, uint, error)
 	DeleteClass(classId string) error
+	GetClass(classId string) (ClassCore, error)
 }
 
 type ClassData interface {
 	RegisterClass(request ClassCore) (ClassCore, string, error)
 	ListClasses(limit, offset int) ([]ClassCore, uint, error)
 	DeleteClass(classId string) error
+	GetClass(classId string) (ClassCore, error)
 }

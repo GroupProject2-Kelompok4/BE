@@ -57,13 +57,13 @@ func (cq *classQuery) RegisterClass(request class.ClassCore) (class.ClassCore, s
 // ListClasses implements class.ClassData
 func (cq *classQuery) ListClasses(limit int, offset int) ([]class.ClassCore, uint, error) {
 	classes := []Class{}
-	users := []User{}
 	var count int64
 	query := cq.db.Table("classes").
 		Where("is_deleted = 0").
 		Order("created_at ASC").
 		Limit(limit).
 		Offset(offset).
+		Preload("User").
 		Find(&classes).
 		Count(&count)
 
@@ -72,17 +72,9 @@ func (cq *classQuery) ListClasses(limit int, offset int) ([]class.ClassCore, uin
 		return nil, 0, errors.New("not found, error while retrieving list classes")
 	}
 
-	userIDs := make(map[string]bool)
-	for _, class := range classes {
-		userIDs[class.UserID] = true
-	}
-
-	cq.db.Table("users").Find(&users, "user_id IN ?", keys(userIDs))
-
 	result := make([]class.ClassCore, len(classes))
 	for i, class := range classes {
 		result[i] = classModels(class)
-		result[i].PIC = getFullname(users, class.UserID)
 	}
 
 	return result, uint(count), nil
@@ -110,4 +102,26 @@ func (cq *classQuery) DeleteClass(classId string) error {
 	}
 
 	return nil
+}
+
+// GetClass implements class.ClassData
+func (cq *classQuery) GetClass(classId string) (class.ClassCore, error) {
+	cls := Class{}
+	query := cq.db.Where("class_id = ?", classId).Preload("User").First(&cls)
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
+		log.Error("list classes not found")
+		return class.ClassCore{}, errors.New("not found, error while retrieving list classes")
+	}
+
+	if query.RowsAffected == 0 {
+		log.Warn("no class has been created")
+		return class.ClassCore{}, errors.New("row affected : 0")
+	}
+
+	if query.Error != nil {
+		log.Error("error while delete class")
+		return class.ClassCore{}, errors.New("duplicate data entry")
+	}
+
+	return classModels(cls), nil
 }

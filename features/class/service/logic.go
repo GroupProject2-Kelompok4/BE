@@ -63,8 +63,8 @@ func (cs *classService) DeleteClass(classId string) error {
 	err := cs.query.DeleteClass(classId)
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
-			log.Error("user profile record not found")
-			return errors.New("user profile record not found")
+			log.Error("class record not found")
+			return errors.New("class record not found")
 		} else {
 			log.Error("internal server error")
 			return errors.New("internal server error")
@@ -72,4 +72,19 @@ func (cs *classService) DeleteClass(classId string) error {
 	}
 
 	return nil
+}
+
+// GetClass implements class.ClassService
+func (cs *classService) GetClass(classId string) (class.ClassCore, error) {
+	result, err := cs.query.GetClass(classId)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			log.Error("not found, error while retrieving class")
+			return class.ClassCore{}, errors.New("not found, error while retrieving class")
+		} else {
+			log.Error("internal server error")
+			return class.ClassCore{}, errors.New("internal server error")
+		}
+	}
+	return result, nil
 }
