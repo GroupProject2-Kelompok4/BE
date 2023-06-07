@@ -4,6 +4,9 @@ import (
 	cd "github.com/GroupProject2-Kelompok4/BE/features/class/data"
 	ch "github.com/GroupProject2-Kelompok4/BE/features/class/handler"
 	cs "github.com/GroupProject2-Kelompok4/BE/features/class/service"
+	fd "github.com/GroupProject2-Kelompok4/BE/features/feedback/data"
+	fh "github.com/GroupProject2-Kelompok4/BE/features/feedback/handler"
+	fs "github.com/GroupProject2-Kelompok4/BE/features/feedback/service"
 	md "github.com/GroupProject2-Kelompok4/BE/features/mentee/data"
 	mh "github.com/GroupProject2-Kelompok4/BE/features/mentee/handler"
 	ms "github.com/GroupProject2-Kelompok4/BE/features/mentee/service"
@@ -26,6 +29,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	initUserRouter(db, e)
 	initClassRouter(db, e)
 	initMenteeRouter(db, e)
+	initFeedbackRouter(db, e)
 }
 
 func initUserRouter(db *gorm.DB, e *echo.Echo) {
@@ -61,4 +65,12 @@ func initMenteeRouter(db *gorm.DB, e *echo.Echo) {
 
 	e.POST("/mentees", menteeHandler.RegisterMentee(), middlewares.JWTMiddleware())
 	e.GET("/mentees", menteeHandler.SearchMentee(), middlewares.JWTMiddleware())
+}
+
+func initFeedbackRouter(db *gorm.DB, e *echo.Echo) {
+	feedbackData := fd.New(db)
+	feedbackService := fs.New(feedbackData)
+	feedbackHandler := fh.New(feedbackService)
+
+	e.POST("/feedbacks", feedbackHandler.RegisterFeedbackMentee(), middlewares.JWTMiddleware())
 }

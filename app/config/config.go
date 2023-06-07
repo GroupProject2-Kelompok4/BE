@@ -8,8 +8,12 @@ import (
 )
 
 var (
-	JWT           string
-	ADMINPASSWORD string
+	JWT            string
+	ADMINPASSWORD  string
+	GCP_CREDENTIAL string
+	GCP_PROJECTID  string
+	GCP_BUCKETNAME string
+	GCP_PATH       string
 )
 
 type AppConfig struct {
@@ -63,6 +67,26 @@ func readEnv() *AppConfig {
 		isRead = false
 	}
 
+	if val, found := os.LookupEnv("GCP_CREDENTIAL"); found {
+		GCP_CREDENTIAL = val
+		isRead = false
+	}
+
+	if val, found := os.LookupEnv("GCP_PROJECTID"); found {
+		GCP_PROJECTID = val
+		isRead = false
+	}
+
+	if val, found := os.LookupEnv("GCP_BUCKETNAME"); found {
+		GCP_BUCKETNAME = val
+		isRead = false
+	}
+
+	if val, found := os.LookupEnv("GCP_PATH"); found {
+		GCP_PATH = val
+		isRead = false
+	}
+
 	if isRead {
 		viper.AddConfigPath(".")
 		viper.SetConfigName("local")
@@ -81,6 +105,10 @@ func readEnv() *AppConfig {
 		app.DBNAME = viper.GetString("DBNAME")
 		JWT = viper.GetString("JWT")
 		ADMINPASSWORD = viper.GetString("ADMINPASSWORD")
+		GCP_CREDENTIAL = viper.GetString("GCP_CREDENTIAL")
+		GCP_PROJECTID = viper.GetString("GCP_PROJECTID")
+		GCP_BUCKETNAME = viper.GetString("GCP_BUCKETNAME")
+		GCP_PATH = viper.GetString("GCP_PATH")
 	}
 
 	return &app

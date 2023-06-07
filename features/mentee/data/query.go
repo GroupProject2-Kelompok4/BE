@@ -61,12 +61,10 @@ func (mq *menteeQuery) SearchMentee(keyword string, limit int, offset int) ([]me
 		Preload("Class").
 		Find(&mentees).
 		Count(&count)
-	if query.Error != nil {
-		if errors.Is(query.Error, gorm.ErrRecordNotFound) {
-			log.Error("list mentees not found")
-			return nil, 0, errors.New("mentees not found")
-		}
-		return nil, 0, query.Error
+
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
+		log.Error("list mentees not found")
+		return nil, 0, errors.New("mentees not found")
 	}
 
 	result := make([]mentee.MenteeCore, len(mentees))
