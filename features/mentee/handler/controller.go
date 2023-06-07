@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/GroupProject2-Kelompok4/BE/features/mentee"
@@ -51,5 +52,53 @@ func (mh *menteeHandler) RegisterMentee() echo.HandlerFunc {
 
 		resp := registerMentee(result)
 		return c.JSON(http.StatusCreated, helper.ResponseFormat(http.StatusCreated, "Successfully created new mentee", resp, nil))
+	}
+}
+
+// SearchMentee implements mentee.MenteeHandler
+func (mh *menteeHandler) SearchMentee() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		keyword := c.QueryParam("keyword")
+		limitStr := c.QueryParam("limit")
+		offsetStr := c.QueryParam("offset")
+
+		limit := 5
+		if limitStr != "" {
+			limitInt, err := strconv.Atoi(limitStr)
+			if err != nil {
+				c.Logger().Errorf("limit is not a number: %s", limitStr)
+				return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad Request", nil, nil))
+			}
+			limit = limitInt
+		}
+
+		offset := 0
+		if offsetStr != "" {
+			offsetInt, err := strconv.Atoi(offsetStr)
+			if err != nil {
+				c.Logger().Errorf("offset is not a number: %s", offsetStr)
+				return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad Request", nil, nil))
+			}
+			offset = offsetInt
+		}
+
+		mentees, count, err := mh.service.SearchMentee(keyword, limit, offset)
+		if err != nil {
+			if strings.Contains(err.Error(), "not found") {
+				return c.JSON(http.StatusNotFound, helper.ResponseFormat(http.StatusNotFound, "The requested resource was not found", nil, nil))
+			}
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, helper.ResponseFormat(http.StatusInternalServerError, "Internal server error", nil, nil))
+			}
+		}
+
+		result := make([]searchMenteeResponse, len(mentees))
+		for i, mentee := range mentees {
+			result[i] = searchMentee(mentee)
+			result[i].No = uint(i + 1)
+		}
+
+		pagination := helper.Paginate(limit, offset, int(count))
+		return c.JSON(http.StatusOK, helper.ResponseFormat(http.StatusOK, "Successfully operation", result, pagination))
 	}
 }

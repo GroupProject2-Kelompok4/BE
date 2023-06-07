@@ -26,6 +26,7 @@ type Mentee struct {
 	EmergencyStatus string              `gorm:"type:varchar(100)"`
 	CreatedAt       time.Time           `gorm:"type:datetime"`
 	UpdatedAt       time.Time           `gorm:"type:datetime"`
+	IsDeleted       bool                `gorm:"type:boolean"`
 	Status          string              `gorm:"type:varchar(100)"`
 	ClassID         string              `gorm:"type:varchar(50)"`
 	Class           Class               `gorm:"references:ClassID"`
@@ -65,8 +66,10 @@ func menteeModels(m Mentee) mentee.MenteeCore {
 		EmergencyStatus: m.EmergencyStatus,
 		CreatedAt:       m.CreatedAt,
 		UpdatedAt:       m.UpdatedAt,
+		IsDeleted:       m.IsDeleted,
 		Status:          m.Status,
 		ClassID:         m.ClassID,
+		ClassName:       m.Class.Name,
 	}
 }
 
@@ -91,6 +94,7 @@ func menteeEntities(m mentee.MenteeCore) Mentee {
 		EmergencyStatus: m.EmergencyStatus,
 		CreatedAt:       m.CreatedAt,
 		UpdatedAt:       m.UpdatedAt,
+		IsDeleted:       m.IsDeleted,
 		Status:          m.Status,
 		ClassID:         m.ClassID,
 	}
