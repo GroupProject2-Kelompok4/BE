@@ -102,3 +102,25 @@ func (mh *menteeHandler) SearchMentee() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, helper.ResponseFormat(http.StatusOK, "Successfully operation", result, pagination))
 	}
 }
+
+// ProfileMenteeAndFeedback implements mentee.MenteeHandler
+func (mh *menteeHandler) ProfileMenteeAndFeedback() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		_, _, err := middlewares.ExtractToken(c)
+		if err != nil {
+			return c.JSON(http.StatusUnauthorized, helper.ResponseFormat(http.StatusUnauthorized, "Missing or Malformed JWT.", nil, nil))
+		}
+
+		menteeId := c.Param("id")
+		menteeLog, err := mh.service.ProfileMenteeAndFeedback(menteeId)
+		if err != nil {
+			if strings.Contains(err.Error(), "not found") {
+				return c.JSON(http.StatusNotFound, helper.ResponseFormat(http.StatusNotFound, "The requested resource was not found", nil, nil))
+			}
+			return c.JSON(http.StatusInternalServerError, helper.ResponseFormat(http.StatusInternalServerError, "Internal server error", nil, nil))
+		}
+
+		resp := profileMenteeAndFeedback(menteeLog)
+		return c.JSON(http.StatusOK, helper.ResponseFormat(http.StatusOK, "Successfully operation.", resp, nil))
+	}
+}

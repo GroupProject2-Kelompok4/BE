@@ -5,6 +5,7 @@ import (
 
 	class "github.com/GroupProject2-Kelompok4/BE/features/class/data"
 	feedback "github.com/GroupProject2-Kelompok4/BE/features/feedback/data"
+	mentee "github.com/GroupProject2-Kelompok4/BE/features/mentee/data"
 	"github.com/GroupProject2-Kelompok4/BE/features/user"
 )
 
@@ -20,6 +21,7 @@ type User struct {
 	CreatedAt   time.Time           `gorm:"type:datetime"`
 	UpdatedAt   time.Time           `gorm:"type:datetime"`
 	IsDeleted   bool                `gorm:"type:boolean"`
+	Mentees     []mentee.Mentee     `gorm:"foreignKey:UserID"`
 	Classes     []class.Class       `gorm:"foreignKey:UserID"`
 	Feedbacks   []feedback.Feedback `gorm:"foreignKey:UserID"`
 }

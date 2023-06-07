@@ -21,7 +21,8 @@ func New(db *gorm.DB) feedback.FeedbackData {
 }
 
 // RegisterFeedbackMentee implements feedback.FeedbackData
-func (fq *feedbackQuery) RegisterFeedbackMentee(request feedback.FeedbackCore) (feedback.FeedbackCore, error) {
+func (fq *feedbackQuery) RegisterFeedbackMentee(request feedback.FeedbackCore, userId string) (feedback.FeedbackCore, error) {
+	request.UserID = userId
 	req := feedbackEntities(request)
 	query := fq.db.Table("feedbacks").Create(&req)
 	if query.Error != nil {

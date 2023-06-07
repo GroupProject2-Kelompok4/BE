@@ -25,7 +25,7 @@ func New(fs feedback.FeedbackService) feedback.FeedbackHandler {
 func (fh *feedbackHandler) RegisterFeedbackMentee() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		request := RegisterFeedbackMenteeRequest{}
-		_, _, errToken := middlewares.ExtractToken(c)
+		userId, _, errToken := middlewares.ExtractToken(c)
 		if errToken != nil {
 			c.Logger().Error("missing or malformed JWT")
 			return c.JSON(http.StatusUnauthorized, helper.ResponseFormat(http.StatusUnauthorized, "Missing or Malformed JWT", nil, nil))
@@ -48,7 +48,7 @@ func (fh *feedbackHandler) RegisterFeedbackMentee() echo.HandlerFunc {
 		}
 
 		request.Proof = imageURL
-		result, err := fh.service.RegisterFeedbackMentee(RequestToCore(request))
+		result, err := fh.service.RegisterFeedbackMentee(RequestToCore(request), userId)
 		if err != nil {
 			if strings.Contains(err.Error(), "empty") {
 				return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))

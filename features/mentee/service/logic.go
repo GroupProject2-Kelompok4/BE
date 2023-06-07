@@ -57,3 +57,18 @@ func (ms *menteeService) SearchMentee(keyword string, limit int, offset int) ([]
 	}
 	return result, count, nil
 }
+
+// ProfileMenteeAndFeedback implements mentee.MenteeService
+func (ms *menteeService) ProfileMenteeAndFeedback(menteeId string) (mentee.MenteeCore, error) {
+	result, err := ms.query.ProfileMenteeAndFeedback(menteeId)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			log.Error("not found, error while retrieving user profile")
+			return mentee.MenteeCore{}, errors.New("not found, error while retrieving user profile")
+		} else {
+			log.Error("internal server error")
+			return mentee.MenteeCore{}, errors.New("internal server error")
+		}
+	}
+	return result, nil
+}

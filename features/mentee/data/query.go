@@ -74,3 +74,22 @@ func (mq *menteeQuery) SearchMentee(keyword string, limit int, offset int) ([]me
 
 	return result, uint(count), nil
 }
+
+// ProfileMenteeAndFeedback implements mentee.MenteeData
+func (mq *menteeQuery) ProfileMenteeAndFeedback(menteeID string) (mentee.MenteeCore, error) {
+	menteeLog := Mentee{}
+	query := mq.db.Table("mentees").
+		Select("mentees.*, users.fullname").
+		Joins("JOIN feedbacks ON mentees.mentee_id = feedbacks.mentee_id").
+		Joins("JOIN users ON mentees.user_id = users.user_id").
+		Preload("User").
+		Preload("Feedbacks").
+		Where("mentees.mentee_id = ? AND mentees.is_deleted = 0", menteeID).
+		First(&menteeLog)
+	if query.Error != nil {
+		log.Error("failed to fetch mentee profile and feedbacks")
+		return mentee.MenteeCore{}, query.Error
+	}
+
+	return modeltoCore(menteeLog), nil
+}
