@@ -101,3 +101,53 @@ func TestRegisterClass(t *testing.T) {
 		data.AssertExpectations(t)
 	})
 }
+
+func TestSearchUser(t *testing.T) {
+	data := mocks.NewMenteeData(t)
+	service := New(data)
+	keyword := "FE"
+	limit := 3
+	offset := 0
+	expectedResult := []mentee.MenteeCore{
+		{Fullname: "mentee", ClassName: "FE 14", Status: "active", EducationType: "Non-IT", Gender: "M"},
+	}
+	expectedCount := uint(1)
+
+	t.Run("success", func(t *testing.T) {
+
+		data.On("SearchMentee", keyword, limit, offset).Return(expectedResult, expectedCount, nil)
+
+		result, _, err := service.SearchMentee(keyword, limit, offset)
+
+		assert.Nil(t, err)
+		assert.Len(t, result, 1)
+		assert.Equal(t, expectedResult[0].Fullname, result[0].Fullname)
+		assert.Equal(t, expectedResult[0].ClassName, result[0].ClassName)
+		assert.Equal(t, expectedResult[0].Status, result[0].Status)
+		assert.Equal(t, expectedResult[0].EducationType, result[0].EducationType)
+		assert.Equal(t, expectedResult[0].Gender, result[0].Gender)
+		data.AssertExpectations(t)
+	})
+
+	t.Run("not found", func(t *testing.T) {
+		data.On("SearchMentee", keyword, limit, offset).Return([]mentee.MenteeCore{}, uint(0), errors.New("not found, error while retrieving list mentees")).Once()
+
+		result, _, err := service.SearchMentee(keyword, limit, offset)
+
+		assert.NotNil(t, uint(0), err)
+		assert.Empty(t, result)
+		assert.EqualError(t, err, "not found, error while retrieving list mentees")
+		data.AssertExpectations(t)
+	})
+
+	t.Run("internal server error", func(t *testing.T) {
+		data.On("SearchMentee", keyword, limit, offset).Return([]mentee.MenteeCore{}, uint(0), errors.New("internal server error")).Once()
+
+		result, _, err := service.SearchMentee(keyword, limit, offset)
+
+		assert.NotNil(t, uint(0), err)
+		assert.Empty(t, result)
+		assert.EqualError(t, err, "internal server error")
+		data.AssertExpectations(t)
+	})
+}

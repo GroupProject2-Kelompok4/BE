@@ -42,3 +42,18 @@ func (ms *menteeService) RegisterMentee(request mentee.MenteeCore) (mentee.Mente
 
 	return result, nil
 }
+
+// SearchMentee implements mentee.MenteeService
+func (ms *menteeService) SearchMentee(keyword string, limit int, offset int) ([]mentee.MenteeCore, uint, error) {
+	result, count, err := ms.query.SearchMentee(keyword, limit, offset)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			log.Error("not found, error while retrieving list mentees")
+			return []mentee.MenteeCore{}, 0, errors.New("not found, error while retrieving list mentees")
+		} else {
+			log.Error("internal server error")
+			return []mentee.MenteeCore{}, 0, errors.New("internal server error")
+		}
+	}
+	return result, count, nil
+}

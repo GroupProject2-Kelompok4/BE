@@ -45,3 +45,34 @@ func (mq *menteeQuery) RegisterMentee(request mentee.MenteeCore) (mentee.MenteeC
 
 	return menteeModels(req), nil
 }
+
+// SearchMentee implements mentee.MenteeData
+func (mq *menteeQuery) SearchMentee(keyword string, limit int, offset int) ([]mentee.MenteeCore, uint, error) {
+	mentees := []Mentee{}
+	var count int64
+	query := mq.db.Table("mentees").
+		Select("mentees.*, classes.name").
+		Joins("JOIN classes ON mentees.class_id = classes.class_id").
+		Where("mentees.status LIKE ? OR mentees.education_type LIKE ? OR classes.name LIKE ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%").
+		Where("mentees.is_deleted = 0").
+		Order("created_at ASC").
+		Limit(limit).
+		Offset(offset).
+		Preload("Class").
+		Find(&mentees).
+		Count(&count)
+	if query.Error != nil {
+		if errors.Is(query.Error, gorm.ErrRecordNotFound) {
+			log.Error("list mentees not found")
+			return nil, 0, errors.New("mentees not found")
+		}
+		return nil, 0, query.Error
+	}
+
+	result := make([]mentee.MenteeCore, len(mentees))
+	for i, mentee := range mentees {
+		result[i] = menteeModels(mentee)
+	}
+
+	return result, uint(count), nil
+}

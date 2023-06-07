@@ -8,6 +8,7 @@ import (
 )
 
 type MenteeCore struct {
+	No              uint
 	MenteeID        string
 	Fullname        string
 	Nickname        string
@@ -26,19 +27,24 @@ type MenteeCore struct {
 	EmergencyStatus string
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
+	IsDeleted       bool
 	Status          string
 	ClassID         string
+	ClassName       string
 	Feedbacks       []feedback.FeedbackCore
 }
 
 type MenteeHandler interface {
 	RegisterMentee() echo.HandlerFunc
+	SearchMentee() echo.HandlerFunc
 }
 
 type MenteeService interface {
 	RegisterMentee(request MenteeCore) (MenteeCore, error)
+	SearchMentee(keyword string, limit int, offset int) ([]MenteeCore, uint, error)
 }
 
 type MenteeData interface {
 	RegisterMentee(request MenteeCore) (MenteeCore, error)
+	SearchMentee(keyword string, limit int, offset int) ([]MenteeCore, uint, error)
 }

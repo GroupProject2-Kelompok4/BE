@@ -60,4 +60,5 @@ func initMenteeRouter(db *gorm.DB, e *echo.Echo) {
 	menteeHandler := mh.New(menteeService)
 
 	e.POST("/mentees", menteeHandler.RegisterMentee(), middlewares.JWTMiddleware())
+	e.GET("/mentees", menteeHandler.SearchMentee(), middlewares.JWTMiddleware())
 }
