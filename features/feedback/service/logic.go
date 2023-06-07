@@ -20,13 +20,13 @@ func New(fd feedback.FeedbackData) feedback.FeedbackService {
 }
 
 // RegisterFeedback implements feedback.FeedbackService
-func (fs *feedbackService) RegisterFeedbackMentee(request feedback.FeedbackCore) (feedback.FeedbackCore, error) {
-	if request.Notes == "" || request.UserID == "" || request.MenteeID == "" {
+func (fs *feedbackService) RegisterFeedbackMentee(request feedback.FeedbackCore, userId string) (feedback.FeedbackCore, error) {
+	if request.Notes == "" || request.MenteeID == "" {
 		log.Error("request cannot be empty")
 		return feedback.FeedbackCore{}, errors.New("request cannot be empty")
 	}
 
-	result, err := fs.query.RegisterFeedbackMentee(request)
+	result, err := fs.query.RegisterFeedbackMentee(request, userId)
 	if err != nil {
 		log.Error("internal server error")
 		return feedback.FeedbackCore{}, errors.New("internal server error")

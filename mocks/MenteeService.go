@@ -12,6 +12,30 @@ type MenteeService struct {
 	mock.Mock
 }
 
+// ProfileMenteeAndFeedback provides a mock function with given fields: menteeId
+func (_m *MenteeService) ProfileMenteeAndFeedback(menteeId string) (mentee.MenteeCore, error) {
+	ret := _m.Called(menteeId)
+
+	var r0 mentee.MenteeCore
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (mentee.MenteeCore, error)); ok {
+		return rf(menteeId)
+	}
+	if rf, ok := ret.Get(0).(func(string) mentee.MenteeCore); ok {
+		r0 = rf(menteeId)
+	} else {
+		r0 = ret.Get(0).(mentee.MenteeCore)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(menteeId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // RegisterMentee provides a mock function with given fields: request
 func (_m *MenteeService) RegisterMentee(request mentee.MenteeCore) (mentee.MenteeCore, error) {
 	ret := _m.Called(request)

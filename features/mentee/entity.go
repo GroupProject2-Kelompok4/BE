@@ -3,7 +3,6 @@ package mentee
 import (
 	"time"
 
-	feedback "github.com/GroupProject2-Kelompok4/BE/features/feedback"
 	"github.com/labstack/echo/v4"
 )
 
@@ -31,20 +30,38 @@ type MenteeCore struct {
 	Status          string
 	ClassID         string
 	ClassName       string
-	Feedbacks       []feedback.FeedbackCore
+	UserID          string
+	Users           string
+	Feedbacks       []FeedbackCore
+}
+
+type FeedbackCore struct {
+	FeedbackId uint
+	Notes      string
+	Proof      string
+	Approved   bool
+	Status     string
+	Users      string
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	UserID     string
+	MenteeID   string
 }
 
 type MenteeHandler interface {
 	RegisterMentee() echo.HandlerFunc
 	SearchMentee() echo.HandlerFunc
+	ProfileMenteeAndFeedback() echo.HandlerFunc
 }
 
 type MenteeService interface {
 	RegisterMentee(request MenteeCore) (MenteeCore, error)
 	SearchMentee(keyword string, limit int, offset int) ([]MenteeCore, uint, error)
+	ProfileMenteeAndFeedback(menteeId string) (MenteeCore, error)
 }
 
 type MenteeData interface {
 	RegisterMentee(request MenteeCore) (MenteeCore, error)
 	SearchMentee(keyword string, limit int, offset int) ([]MenteeCore, uint, error)
+	ProfileMenteeAndFeedback(menteeId string) (MenteeCore, error)
 }

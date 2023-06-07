@@ -26,6 +26,7 @@ type RegisterMenteeRequest struct {
 	EmergencyPhone  string `json:"emergency_phone" form:"emergency_phone"`
 	EmergencyStatus string `json:"emergency_status" form:"emergency_status"`
 	Status          string `json:"status" form:"status"`
+	UserID          string `json:"user_id" form:"user_id"`
 	ClassID         string `json:"class_id" form:"class_id"`
 }
 
@@ -54,6 +55,7 @@ func RequestToCore(data interface{}) mentee.MenteeCore {
 		res.EmergencyPhone = v.EmergencyPhone
 		res.EmergencyStatus = v.EmergencyStatus
 		res.Status = v.Status
+		res.UserID = v.UserID
 		res.ClassID = v.ClassID
 	default:
 		return mentee.MenteeCore{}

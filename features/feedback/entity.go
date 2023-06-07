@@ -24,9 +24,9 @@ type FeedbackHandler interface {
 }
 
 type FeedbackService interface {
-	RegisterFeedbackMentee(request FeedbackCore) (FeedbackCore, error)
+	RegisterFeedbackMentee(request FeedbackCore, userId string) (FeedbackCore, error)
 }
 
 type FeedbackData interface {
-	RegisterFeedbackMentee(request FeedbackCore) (FeedbackCore, error)
+	RegisterFeedbackMentee(request FeedbackCore, userId string) (FeedbackCore, error)
 }

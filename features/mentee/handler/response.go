@@ -45,3 +45,36 @@ func searchMentee(m mentee.MenteeCore) searchMenteeResponse {
 		Gender:        m.Gender,
 	}
 }
+
+type profileMenteeAndFeedbackResponse struct {
+	MenteeID  string     `json:"mentee_id"`
+	Users     string     `json:"users"`
+	Feedbacks []Feedback `json:"feedbacks"`
+}
+
+type Feedback struct {
+	FeedbackId uint   `json:"feedback_id"`
+	Status     string `json:"status"`
+	Notes      string `json:"notes"`
+	Proof      string `json:"proof"`
+}
+
+func profileMenteeAndFeedback(m mentee.MenteeCore) profileMenteeAndFeedbackResponse {
+	feedbacks := make([]Feedback, len(m.Feedbacks))
+	for i, feedback := range m.Feedbacks {
+		feedbacks[i] = Feedback{
+			FeedbackId: feedback.FeedbackId,
+			Status:     feedback.Status,
+			Notes:      feedback.Notes,
+			Proof:      feedback.Proof,
+		}
+	}
+
+	response := profileMenteeAndFeedbackResponse{
+		MenteeID:  m.MenteeID,
+		Users:     m.Users,
+		Feedbacks: feedbacks,
+	}
+
+	return response
+}
