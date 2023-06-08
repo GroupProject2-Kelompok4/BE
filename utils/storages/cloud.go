@@ -6,13 +6,13 @@ import (
 	"io"
 	"log"
 	"mime/multipart"
-	"os"
 	"strings"
 	"time"
 
 	"cloud.google.com/go/storage"
 	"github.com/GroupProject2-Kelompok4/BE/app/config"
 	"github.com/google/uuid"
+	"google.golang.org/api/option"
 )
 
 type ClientUploader struct {
@@ -25,10 +25,10 @@ type ClientUploader struct {
 var Uploader *ClientUploader
 
 func init() {
-	os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", config.GCP_CREDENTIAL) // GANTI DENGAN JALUR FILE KREDENSIAL JSON ANDA
-	client, err := storage.NewClient(context.Background())
+	ctx := context.Background()
+	client, err := storage.NewClient(ctx, option.WithCredentialsFile(config.GCP_CREDENTIAL))
 	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
+		log.Fatal(err)
 	}
 
 	Uploader = &ClientUploader{
