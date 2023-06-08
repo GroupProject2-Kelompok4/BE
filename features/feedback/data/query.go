@@ -50,3 +50,25 @@ func (fq *feedbackQuery) RegisterFeedbackMentee(request feedback.FeedbackCore, u
 
 	return feedbackModels(resp), nil
 }
+
+// UpdateFeedbackMentee implements feedback.FeedbackData
+func (fq *feedbackQuery) UpdateFeedbackMentee(request feedback.FeedbackCore, feedbackId, userId string) error {
+	req := feedbackEntities(request)
+	query := fq.db.Table("feedbacks").Where("feedback_id = ? AND user_id = ? AND is_deleted = 0", feedbackId, userId).Updates(&req)
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
+		log.Error("feedback record not found")
+		return errors.New("feedback record not found")
+	}
+
+	if query.RowsAffected == 0 {
+		log.Warn("no feedback has been created")
+		return errors.New("row affected : 0")
+	}
+
+	if query.Error != nil {
+		log.Error("error while updating feedback")
+		return errors.New("duplicate data entry")
+	}
+
+	return nil
+}

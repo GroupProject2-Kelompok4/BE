@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/GroupProject2-Kelompok4/BE/features/feedback"
 	"github.com/GroupProject2-Kelompok4/BE/utils"
@@ -33,4 +34,23 @@ func (fs *feedbackService) RegisterFeedbackMentee(request feedback.FeedbackCore,
 	}
 
 	return result, nil
+}
+
+// UpdateFeedbackMentee implements feedback.FeedbackService
+func (fs *feedbackService) UpdateFeedbackMentee(request feedback.FeedbackCore, feedbackId, userId string) error {
+	err := fs.query.UpdateFeedbackMentee(request, feedbackId, userId)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			log.Error("feedback record not found")
+			return errors.New("feedbackrecord not found")
+		} else if strings.Contains(err.Error(), "duplicate data entry") {
+			log.Error("failed to update feedback, duplicate data entry")
+			return errors.New("failed to update feedback, duplicate data entry")
+		} else {
+			log.Error("internal server error")
+			return errors.New("internal server error")
+		}
+	}
+
+	return nil
 }
