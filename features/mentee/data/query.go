@@ -145,9 +145,9 @@ func (mq *menteeQuery) ProfileMentee(menteeId string) (mentee.MenteeCore, error)
 	menteeLog := Mentee{}
 	query := mq.db.Table("mentees").
 		Select("mentees.*").
-		Joins("JOIN feedbacks ON mentees.mentee_id = feedbacks.mentee_id").
-		Joins("JOIN users AS feedback_users ON feedbacks.user_id = feedback_users.user_id").
-		Joins("JOIN mentees AS feedback_mentees ON feedbacks.mentee_id = feedback_mentees.mentee_id").
+		Joins("LEFT JOIN feedbacks ON mentees.mentee_id = feedbacks.mentee_id").
+		Joins("LEFT JOIN users AS feedback_users ON feedbacks.user_id = feedback_users.user_id").
+		Joins("LEFT JOIN mentees AS feedback_mentees ON feedbacks.mentee_id = feedback_mentees.mentee_id").
 		Preload("Class").
 		Preload("Feedbacks").
 		Preload("Feedbacks.User").
