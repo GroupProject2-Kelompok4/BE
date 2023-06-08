@@ -72,3 +72,27 @@ func (fq *feedbackQuery) UpdateFeedbackMentee(request feedback.FeedbackCore, fee
 
 	return nil
 }
+
+// DeleteFeedbackMentee implements feedback.FeedbackData
+func (fq *feedbackQuery) DeleteFeedbackMentee(feedbackId string, userId string) error {
+	query := fq.db.Table("feedbacks").Where("feedback_id = ? AND user_id = ? AND is_deleted = 0", feedbackId, userId).Updates(map[string]interface{}{
+		"is_deleted": true,
+	})
+
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
+		log.Error("feedbackrecord not found")
+		return errors.New("feedback record not found")
+	}
+
+	if query.RowsAffected == 0 {
+		log.Warn("no feedback has been created")
+		return errors.New("row affected : 0")
+	}
+
+	if query.Error != nil {
+		log.Error("error while deleted feedback")
+		return errors.New("internal server error")
+	}
+
+	return nil
+}

@@ -78,4 +78,5 @@ func initFeedbackRouter(db *gorm.DB, e *echo.Echo) {
 
 	e.POST("/feedbacks", feedbackHandler.RegisterFeedbackMentee(), middlewares.JWTMiddleware())
 	e.PUT("/feedbacks/:id", feedbackHandler.UpdateFeedbackMentee(), middlewares.JWTMiddleware())
+	e.DELETE("/feedbacks/:id", feedbackHandler.DeleteFeedbackMentee(), middlewares.JWTMiddleware())
 }

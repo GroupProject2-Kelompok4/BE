@@ -54,3 +54,19 @@ func (fs *feedbackService) UpdateFeedbackMentee(request feedback.FeedbackCore, f
 
 	return nil
 }
+
+// DeleteFeedbackMentee implements feedback.FeedbackService
+func (fs *feedbackService) DeleteFeedbackMentee(feedbackId string, userId string) error {
+	err := fs.query.DeleteFeedbackMentee(feedbackId, userId)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			log.Error("feedback record not found")
+			return errors.New("feedback record not found")
+		} else {
+			log.Error("internal server error")
+			return errors.New("internal server error")
+		}
+	}
+
+	return nil
+}

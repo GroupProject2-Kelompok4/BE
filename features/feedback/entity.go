@@ -22,14 +22,17 @@ type FeedbackCore struct {
 type FeedbackHandler interface {
 	RegisterFeedbackMentee() echo.HandlerFunc
 	UpdateFeedbackMentee() echo.HandlerFunc
+	DeleteFeedbackMentee() echo.HandlerFunc
 }
 
 type FeedbackService interface {
 	RegisterFeedbackMentee(request FeedbackCore, userId string) (FeedbackCore, error)
 	UpdateFeedbackMentee(request FeedbackCore, feedbackId, userId string) error
+	DeleteFeedbackMentee(feedbackId, userId string) error
 }
 
 type FeedbackData interface {
 	RegisterFeedbackMentee(request FeedbackCore, userId string) (FeedbackCore, error)
 	UpdateFeedbackMentee(request FeedbackCore, feedbackId, userId string) error
+	DeleteFeedbackMentee(feedbackId, userId string) error
 }
