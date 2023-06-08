@@ -108,3 +108,25 @@ func (fh *feedbackHandler) UpdateFeedbackMentee() echo.HandlerFunc {
 		return c.JSON(http.StatusCreated, helper.ResponseFormat(http.StatusCreated, "Successfully updated feedback", nil, nil))
 	}
 }
+
+// DeleteFeedbackMentee implements feedback.FeedbackHandler
+func (fh *feedbackHandler) DeleteFeedbackMentee() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		userId, _, errToken := middlewares.ExtractToken(c)
+		if errToken != nil {
+			c.Logger().Error("missing or malformed JWT")
+			return c.JSON(http.StatusUnauthorized, helper.ResponseFormat(http.StatusUnauthorized, "Missing or Malformed JWT.", nil, nil))
+		}
+
+		feedbackId := c.Param("id")
+		err := fh.service.DeleteFeedbackMentee(feedbackId, userId)
+		if err != nil {
+			if strings.Contains(err.Error(), "not found") {
+				return c.JSON(http.StatusNotFound, helper.ResponseFormat(http.StatusNotFound, "The requested resource was not found", nil, nil))
+			}
+			return c.JSON(http.StatusInternalServerError, helper.ResponseFormat(http.StatusInternalServerError, "Internal Server Error", nil, nil))
+		}
+
+		return c.JSON(http.StatusOK, helper.ResponseFormat(http.StatusCreated, "Successfully deleted feedback", nil, nil))
+	}
+}
