@@ -114,3 +114,28 @@ func (mq *menteeQuery) UpdateMentee(menteeId string, request mentee.MenteeCore) 
 
 	return nil
 }
+
+// DeleteMentee implements mentee.MenteeData
+func (mq *menteeQuery) DeactiveMentee(menteeId string) error {
+	query := mq.db.Table("mentees").Where("mentee_id = ? AND is_deleted = 0", menteeId).Updates(map[string]interface{}{
+		"is_deleted": true,
+		"status":     "deleted",
+	})
+
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
+		log.Error("mentee profile record not found")
+		return errors.New("mentee profile record not found")
+	}
+
+	if query.RowsAffected == 0 {
+		log.Warn("no mentee has been created")
+		return errors.New("row affected : 0")
+	}
+
+	if query.Error != nil {
+		log.Error("error while deactivate mentee")
+		return errors.New("duplicate data entry")
+	}
+
+	return nil
+}

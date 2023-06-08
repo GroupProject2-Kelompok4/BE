@@ -179,6 +179,7 @@ func (uh *userHandler) DeactiveUser() echo.HandlerFunc {
 			c.Logger().Error("missing or malformed JWT")
 			return c.JSON(http.StatusUnauthorized, helper.ResponseFormat(http.StatusUnauthorized, "Missing or Malformed JWT.", nil, nil))
 		}
+
 		if role != "admin" {
 			c.Logger().Error("unauthorized access")
 			return c.JSON(http.StatusUnauthorized, helper.ResponseFormat(http.StatusUnauthorized, "Unauthorized access", nil, nil))

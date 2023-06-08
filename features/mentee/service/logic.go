@@ -96,3 +96,19 @@ func (ms *menteeService) UpdateMentee(menteeId string, request mentee.MenteeCore
 
 	return nil
 }
+
+// DeleteMentee implements mentee.MenteeService
+func (ms *menteeService) DeactiveMentee(menteeId string) error {
+	err := ms.query.DeactiveMentee(menteeId)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			log.Error("mentee profile record not found")
+			return errors.New("mentee profile record not found")
+		} else {
+			log.Error("internal server error")
+			return errors.New("internal server error")
+		}
+	}
+
+	return nil
+}
