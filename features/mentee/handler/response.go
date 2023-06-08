@@ -50,7 +50,7 @@ func searchMentee(m mentee.MenteeCore) searchMenteeResponse {
 type profileMenteeAndFeedbackResponse struct {
 	MenteeID  string     `json:"mentee_id"`
 	Users     string     `json:"users"`
-	Feedbacks []Feedback `json:"feedbacks"`
+	Feedbacks []Feedback `json:"feedbacks,omitempty"`
 }
 
 type Feedback struct {
@@ -98,7 +98,7 @@ type profileMenteeLogResponse struct {
 	EmergencyName   string              `json:"emergency_name"`
 	EmergencyPhone  string              `json:"emergency_phone"`
 	EmergencyStatus string              `json:"emergency_status"`
-	Feedbacks       []FeedbackMenteeLog `json:"feedbacks"`
+	Feedbacks       []FeedbackMenteeLog `json:"feedbacks,omitempty"`
 }
 
 type FeedbackMenteeLog struct {
