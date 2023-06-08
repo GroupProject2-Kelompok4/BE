@@ -112,7 +112,7 @@ $ go run main.go
 
 # 🤖 Author
 
--  Dimas A Yudhana  <br>  [![GitHub](https://img.shields.io/badge/Dimas A Yudhana-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dimasyudhana)
+-  Dimas A Yudhana  <br>  [![GitHub](https://img.shields.io/badge/DimasYudhana-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dimasyudhana)
 
 <h5>
 <p align="center">Created by Group 4 ©️ 2023</p>
