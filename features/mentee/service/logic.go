@@ -112,3 +112,18 @@ func (ms *menteeService) DeactiveMentee(menteeId string) error {
 
 	return nil
 }
+
+// ProfileMentee implements mentee.MenteeService
+func (ms *menteeService) ProfileMentee(menteeId string) (mentee.MenteeCore, error) {
+	result, err := ms.query.ProfileMentee(menteeId)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			log.Error("not found, error while retrieving user profile")
+			return mentee.MenteeCore{}, errors.New("not found, error while retrieving user profile")
+		} else {
+			log.Error("internal server error")
+			return mentee.MenteeCore{}, errors.New("internal server error")
+		}
+	}
+	return result, nil
+}

@@ -76,7 +76,7 @@ func (mq *menteeQuery) SearchMentee(keyword string, limit int, offset int) ([]me
 }
 
 // ProfileMenteeAndFeedback implements mentee.MenteeData
-func (mq *menteeQuery) ProfileMenteeAndFeedback(menteeID string) (mentee.MenteeCore, error) {
+func (mq *menteeQuery) ProfileMenteeAndFeedback(menteeId string) (mentee.MenteeCore, error) {
 	menteeLog := Mentee{}
 	query := mq.db.Table("mentees").
 		Select("mentees.*, users.fullname").
@@ -84,7 +84,7 @@ func (mq *menteeQuery) ProfileMenteeAndFeedback(menteeID string) (mentee.MenteeC
 		Joins("JOIN users ON mentees.user_id = users.user_id").
 		Preload("User").
 		Preload("Feedbacks").
-		Where("mentees.mentee_id = ? AND mentees.is_deleted = 0", menteeID).
+		Where("mentees.mentee_id = ? AND mentees.is_deleted = 0", menteeId).
 		First(&menteeLog)
 	if query.Error != nil {
 		log.Error("failed to fetch mentee profile and feedbacks")
@@ -138,4 +138,26 @@ func (mq *menteeQuery) DeactiveMentee(menteeId string) error {
 	}
 
 	return nil
+}
+
+// ProfileMentee implements mentee.MenteeData
+func (mq *menteeQuery) ProfileMentee(menteeId string) (mentee.MenteeCore, error) {
+	menteeLog := Mentee{}
+	query := mq.db.Table("mentees").
+		Select("mentees.*").
+		Joins("JOIN feedbacks ON mentees.mentee_id = feedbacks.mentee_id").
+		Joins("JOIN users AS feedback_users ON feedbacks.user_id = feedback_users.user_id").
+		Joins("JOIN mentees AS feedback_mentees ON feedbacks.mentee_id = feedback_mentees.mentee_id").
+		Preload("Class").
+		Preload("Feedbacks").
+		Preload("Feedbacks.User").
+		Preload("Feedbacks.Mentee").
+		Where("mentees.mentee_id = ? AND mentees.is_deleted = 0", menteeId).
+		First(&menteeLog)
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
+		log.Error("mentee profile record not found")
+		return mentee.MenteeCore{}, errors.New("mentee profile record not found")
+	}
+
+	return modeltoCore(menteeLog), nil
 }

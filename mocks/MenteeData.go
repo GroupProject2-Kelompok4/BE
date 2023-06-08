@@ -26,6 +26,30 @@ func (_m *MenteeData) DeactiveMentee(menteeId string) error {
 	return r0
 }
 
+// ProfileMentee provides a mock function with given fields: menteeId
+func (_m *MenteeData) ProfileMentee(menteeId string) (mentee.MenteeCore, error) {
+	ret := _m.Called(menteeId)
+
+	var r0 mentee.MenteeCore
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (mentee.MenteeCore, error)); ok {
+		return rf(menteeId)
+	}
+	if rf, ok := ret.Get(0).(func(string) mentee.MenteeCore); ok {
+		r0 = rf(menteeId)
+	} else {
+		r0 = ret.Get(0).(mentee.MenteeCore)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(menteeId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // ProfileMenteeAndFeedback provides a mock function with given fields: menteeId
 func (_m *MenteeData) ProfileMenteeAndFeedback(menteeId string) (mentee.MenteeCore, error) {
 	ret := _m.Called(menteeId)
