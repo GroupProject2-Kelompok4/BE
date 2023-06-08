@@ -13,6 +13,7 @@ type Feedback struct {
 	Approved   bool      `gorm:"type:boolean"`
 	CreatedAt  time.Time `gorm:"type:datetime"`
 	UpdatedAt  time.Time `gorm:"type:datetime"`
+	IsDeleted  bool      `gorm:"type:boolean"`
 	UserID     string    `gorm:"type:varchar(50)"`
 	MenteeID   string    `gorm:"type:varchar(50)"`
 	User       User      `gorm:"references:UserID"`

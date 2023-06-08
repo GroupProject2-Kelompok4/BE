@@ -77,4 +77,5 @@ func initFeedbackRouter(db *gorm.DB, e *echo.Echo) {
 	feedbackHandler := fh.New(feedbackService)
 
 	e.POST("/feedbacks", feedbackHandler.RegisterFeedbackMentee(), middlewares.JWTMiddleware())
+	e.PUT("/feedbacks/:id", feedbackHandler.UpdateFeedbackMentee(), middlewares.JWTMiddleware())
 }

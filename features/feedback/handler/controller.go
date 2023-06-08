@@ -62,3 +62,49 @@ func (fh *feedbackHandler) RegisterFeedbackMentee() echo.HandlerFunc {
 		return c.JSON(http.StatusCreated, helper.ResponseFormat(http.StatusCreated, "Successfully created new feedback", resp, nil))
 	}
 }
+
+// UpdateFeedbackMentee implements feedback.FeedbackHandler
+func (fh *feedbackHandler) UpdateFeedbackMentee() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		request := UpdateFeedbackMenteeRequest{}
+		userId, _, errToken := middlewares.ExtractToken(c)
+		if errToken != nil {
+			c.Logger().Error("missing or malformed JWT")
+			return c.JSON(http.StatusUnauthorized, helper.ResponseFormat(http.StatusUnauthorized, "Missing or Malformed JWT.", nil, nil))
+		}
+
+		feedbackId := c.Param("id")
+
+		errBind := c.Bind(&request)
+		if errBind != nil {
+			c.Logger().Error("error on bind login input")
+			return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
+		}
+
+		var imageURL string
+		file, errReq := c.FormFile("proof")
+		if errReq == nil {
+			imageURL, errReq = storages.UploadImage(c, file)
+			if errReq != nil {
+				return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Failed to upload image", nil, nil))
+			}
+			request.Proof = &imageURL
+		}
+
+		request.Proof = &imageURL
+		err := fh.service.UpdateFeedbackMentee(RequestToCore(&request), feedbackId, userId)
+		if err != nil {
+			if strings.Contains(err.Error(), "empty") {
+				return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
+			}
+			if strings.Contains(err.Error(), "duplicated") {
+				return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
+			}
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, helper.ResponseFormat(http.StatusInternalServerError, "Internal server error", nil, nil))
+			}
+		}
+
+		return c.JSON(http.StatusCreated, helper.ResponseFormat(http.StatusCreated, "Successfully updated feedback", nil, nil))
+	}
+}
