@@ -52,6 +52,7 @@ type MenteeHandler interface {
 	RegisterMentee() echo.HandlerFunc
 	SearchMentee() echo.HandlerFunc
 	ProfileMenteeAndFeedback() echo.HandlerFunc
+	ProfileMentee() echo.HandlerFunc
 	UpdateMentee() echo.HandlerFunc
 	DeactiveMentee() echo.HandlerFunc
 }
@@ -60,6 +61,7 @@ type MenteeService interface {
 	RegisterMentee(request MenteeCore) (MenteeCore, error)
 	SearchMentee(keyword string, limit int, offset int) ([]MenteeCore, uint, error)
 	ProfileMenteeAndFeedback(menteeId string) (MenteeCore, error)
+	ProfileMentee(menteeId string) (MenteeCore, error)
 	UpdateMentee(menteeId string, request MenteeCore) error
 	DeactiveMentee(menteeId string) error
 }
@@ -68,6 +70,7 @@ type MenteeData interface {
 	RegisterMentee(request MenteeCore) (MenteeCore, error)
 	SearchMentee(keyword string, limit int, offset int) ([]MenteeCore, uint, error)
 	ProfileMenteeAndFeedback(menteeId string) (MenteeCore, error)
+	ProfileMentee(menteeId string) (MenteeCore, error)
 	UpdateMentee(menteeId string, request MenteeCore) error
 	DeactiveMentee(menteeId string) error
 }

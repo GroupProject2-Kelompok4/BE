@@ -36,7 +36,7 @@ type Mentee struct {
 
 type Class struct {
 	ClassID      string    `gorm:"primaryKey;type:varchar(50)"`
-	Name         string    `gorm:"type:varchar(5);not null;unique"`
+	Name         string    `gorm:"type:varchar(100);not null;unique"`
 	StartDate    time.Time `gorm:"type:date"`
 	GraduateDate time.Time `gorm:"type:date"`
 	CreatedAt    time.Time `gorm:"type:datetime"`
@@ -145,6 +145,7 @@ func modeltoCore(m Mentee) mentee.MenteeCore {
 			CreatedAt:  f.CreatedAt,
 			UpdatedAt:  f.UpdatedAt,
 			UserID:     f.UserID,
+			Users:      f.User.Fullname,
 			Status:     f.Mentee.Status,
 			MenteeID:   f.MenteeID,
 		}
@@ -173,7 +174,6 @@ func modeltoCore(m Mentee) mentee.MenteeCore {
 		Status:          m.Status,
 		ClassID:         m.ClassID,
 		ClassName:       m.Class.Name,
-		Users:           m.User.Fullname,
 		Feedbacks:       feedbacks,
 	}
 }
