@@ -9,7 +9,7 @@ import (
 
 type Class struct {
 	ClassID      string          `gorm:"primaryKey;type:varchar(50)"`
-	Name         string          `gorm:"type:varchar(5);not null;unique"`
+	Name         string          `gorm:"type:varchar(100);not null;unique"`
 	StartDate    time.Time       `gorm:"type:date"`
 	GraduateDate time.Time       `gorm:"type:date"`
 	CreatedAt    time.Time       `gorm:"type:datetime"`
