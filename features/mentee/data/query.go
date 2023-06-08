@@ -93,3 +93,24 @@ func (mq *menteeQuery) ProfileMenteeAndFeedback(menteeID string) (mentee.MenteeC
 
 	return modeltoCore(menteeLog), nil
 }
+
+// UpdateMentee implements mentee.MenteeData
+func (mq *menteeQuery) UpdateMentee(menteeId string, request mentee.MenteeCore) error {
+	query := mq.db.Table("mentees").Where("mentee_id = ? AND is_deleted = 0", menteeId).Updates(menteeEntities(request))
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
+		log.Error("mentee profile record not found")
+		return errors.New("mentee profile record not found")
+	}
+
+	if query.RowsAffected == 0 {
+		log.Warn("no mentee has been created")
+		return errors.New("row affected : 0")
+	}
+
+	if query.Error != nil {
+		log.Error("error while updating mentee")
+		return errors.New("duplicate data entry")
+	}
+
+	return nil
+}

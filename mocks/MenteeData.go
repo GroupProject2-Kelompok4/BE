@@ -93,6 +93,20 @@ func (_m *MenteeData) SearchMentee(keyword string, limit int, offset int) ([]men
 	return r0, r1, r2
 }
 
+// UpdateMentee provides a mock function with given fields: menteeId, request
+func (_m *MenteeData) UpdateMentee(menteeId string, request mentee.MenteeCore) error {
+	ret := _m.Called(menteeId, request)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, mentee.MenteeCore) error); ok {
+		r0 = rf(menteeId, request)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 type mockConstructorTestingTNewMenteeData interface {
 	mock.TestingT
 	Cleanup(func())
