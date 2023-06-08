@@ -6,10 +6,12 @@ import (
 	"log"
 	"mime/multipart"
 	"os"
+	"strings"
 	"time"
 
 	"cloud.google.com/go/storage"
 	"github.com/GroupProject2-Kelompok4/BE/app/config"
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -56,10 +58,12 @@ func UploadImage(c echo.Context, file *multipart.FileHeader) (string, error) {
 }
 
 func (s *ClientUploader) UploadFile(file io.Reader, fileName string) (string, error) {
+	rand := uuid.New().String()
+
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*20)
 	defer cancel()
 
-	wc := s.storageClient.Bucket(s.bucketName).Object(s.path + fileName).NewWriter(ctx)
+	wc := s.storageClient.Bucket(s.bucketName).Object(s.path + fileName + rand).NewWriter(ctx)
 
 	if _, err := io.Copy(wc, file); err != nil {
 		return "", err
@@ -69,6 +73,7 @@ func (s *ClientUploader) UploadFile(file io.Reader, fileName string) (string, er
 		return "", err
 	}
 
-	fileURL := "https://storage.googleapis.com/" + s.bucketName + "/" + s.path + fileName
+	escapedFileName := strings.ReplaceAll(fileName, " ", "%20")
+	fileURL := "https://storage.googleapis.com/" + s.bucketName + "/" + s.path + escapedFileName + rand
 	return fileURL, nil
 }
