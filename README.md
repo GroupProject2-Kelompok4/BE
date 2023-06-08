@@ -15,7 +15,6 @@ This RESTful API was developed by using Golang and written based on Clean Archit
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 
 **Deployment:** <br>
-![Google Cloud](https://www.google.com/url?sa=i&url=https%3A%2F%2Fseeklogo.com%2Fvector-logo%2F336116%2Fgoogle-cloud&psig=AOvVaw3o-wCICivwwkA-Tk90-PoJ&ust=1686311725449000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCKio1OzOs_8CFQAAAAAdAAAAABAE&)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
 
