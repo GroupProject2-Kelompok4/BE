@@ -67,6 +67,7 @@ func initMenteeRouter(db *gorm.DB, e *echo.Echo) {
 	e.GET("/mentees", menteeHandler.SearchMentee(), middlewares.JWTMiddleware())
 	e.GET("/mentees/:id/feedbacks", menteeHandler.ProfileMenteeAndFeedback(), middlewares.JWTMiddleware())
 	e.PUT("/mentees/:id", menteeHandler.UpdateMentee(), middlewares.JWTMiddleware())
+	e.DELETE("/mentees/:id", menteeHandler.DeactiveMentee(), middlewares.JWTMiddleware())
 }
 
 func initFeedbackRouter(db *gorm.DB, e *echo.Echo) {
