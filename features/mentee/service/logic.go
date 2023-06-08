@@ -72,3 +72,27 @@ func (ms *menteeService) ProfileMenteeAndFeedback(menteeId string) (mentee.Mente
 	}
 	return result, nil
 }
+
+// UpdateMentee implements mentee.MenteeService
+func (ms *menteeService) UpdateMentee(menteeId string, request mentee.MenteeCore) error {
+	if request.Fullname == "" || request.Nickname == "" || request.Phone == "" || request.Telegram == "" || request.ClassID == "" {
+		log.Error("request cannot be empty")
+		return errors.New("request cannot be empty")
+	}
+
+	err := ms.query.UpdateMentee(menteeId, request)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			log.Error("mentee profile record not found")
+			return errors.New("mentee profile record not found")
+		} else if strings.Contains(err.Error(), "duplicate data entry") {
+			log.Error("failed to update mentee, duplicate data entry")
+			return errors.New("failed to update mentee, duplicate data entry")
+		} else {
+			log.Error("internal server error")
+			return errors.New("internal server error")
+		}
+	}
+
+	return nil
+}

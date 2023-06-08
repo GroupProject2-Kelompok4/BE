@@ -12,23 +12,23 @@ type FeedbackData struct {
 	mock.Mock
 }
 
-// RegisterFeedbackMentee provides a mock function with given fields: request
-func (_m *FeedbackData) RegisterFeedbackMentee(request feedback.FeedbackCore) (feedback.FeedbackCore, error) {
-	ret := _m.Called(request)
+// RegisterFeedbackMentee provides a mock function with given fields: request, userId
+func (_m *FeedbackData) RegisterFeedbackMentee(request feedback.FeedbackCore, userId string) (feedback.FeedbackCore, error) {
+	ret := _m.Called(request, userId)
 
 	var r0 feedback.FeedbackCore
 	var r1 error
-	if rf, ok := ret.Get(0).(func(feedback.FeedbackCore) (feedback.FeedbackCore, error)); ok {
-		return rf(request)
+	if rf, ok := ret.Get(0).(func(feedback.FeedbackCore, string) (feedback.FeedbackCore, error)); ok {
+		return rf(request, userId)
 	}
-	if rf, ok := ret.Get(0).(func(feedback.FeedbackCore) feedback.FeedbackCore); ok {
-		r0 = rf(request)
+	if rf, ok := ret.Get(0).(func(feedback.FeedbackCore, string) feedback.FeedbackCore); ok {
+		r0 = rf(request, userId)
 	} else {
 		r0 = ret.Get(0).(feedback.FeedbackCore)
 	}
 
-	if rf, ok := ret.Get(1).(func(feedback.FeedbackCore) error); ok {
-		r1 = rf(request)
+	if rf, ok := ret.Get(1).(func(feedback.FeedbackCore, string) error); ok {
+		r1 = rf(request, userId)
 	} else {
 		r1 = ret.Error(1)
 	}
