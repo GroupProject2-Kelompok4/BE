@@ -11,12 +11,8 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
+	"github.com/GroupProject2-Kelompok4/BE/app/config"
 	"github.com/google/uuid"
-)
-
-const (
-	projectID  = "be-alta-17" // GANTI DENGAN PROJECT ID ANDA
-	bucketName = "immersive"  // GANTI DENGAN NAMA BUCKET ANDA
 )
 
 type ClientUploader struct {
@@ -29,7 +25,7 @@ type ClientUploader struct {
 var Uploader *ClientUploader
 
 func init() {
-	os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", "./credential.json") // GANTI DENGAN JALUR FILE KREDENSIAL JSON ANDA
+	os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", config.GCP_CREDENTIAL) // GANTI DENGAN JALUR FILE KREDENSIAL JSON ANDA
 	client, err := storage.NewClient(context.Background())
 	if err != nil {
 		log.Fatalf("Failed to create client: %v", err)
@@ -37,9 +33,9 @@ func init() {
 
 	Uploader = &ClientUploader{
 		cl:         client,
-		bucketName: bucketName,
-		projectID:  projectID,
-		uploadPath: "latihan/",
+		bucketName: config.GCP_BUCKETNAME,
+		projectID:  config.GCP_PROJECTID,
+		uploadPath: config.GCP_PATH,
 	}
 
 }
