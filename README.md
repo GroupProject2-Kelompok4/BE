@@ -15,6 +15,8 @@ This RESTful API was developed by using Golang and written based on Clean Archit
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 
 **Deployment:** <br>
+![Google Cloud](https://img.shields.io/badge/googlecloud-%230db7ed.svg?style=for-the-badge&logo=googlecloud&logoColor=white)
+![Google Cloud Storage](https://img.shields.io/badge/googlecloudstorage-%230db7ed.svg?style=for-the-badge&logo=googlecloudstorage&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
 
@@ -23,7 +25,7 @@ This RESTful API was developed by using Golang and written based on Clean Archit
 ![Discord](https://img.shields.io/badge/Discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)
 
 # 🔗 ERD
-<img src="ERD.jpg">
+<img src="ERD-ImmersiveDashboard.png">
 
 # 🔥 Open API
 
@@ -34,13 +36,13 @@ Simply [click here](https://app.swaggerhub.com/apis/dimasyudhana/immersivedashbo
   
 | Method      | Endpoint            | Params      |q-Params            | JWT Token   | Function                                |
 | ----------- | ------------------- | ----------- |--------------------| ----------- | --------------------------------------- |
-| POST        | /register           | -           |-                   | NO          | Register a new Use                      |
-| POST        | /login              | -           |-                   | YES         | Login to the system                     |
-| GET         | /users              | -           |-                   | YES         | Show user profile                       |
+| POST        | /login              | -           |-                   | NO          | Login to the system                     |
+| POST        | /register           | -           |-                   | YES         | Register a new user                     |
+| PUT         | /users              | user_id     |-                   | YES         | Update user profile by admin            |
+| DELETE      | /users              | user_id     |-                   | YES         | Deactive user profile by admin          |
+| GET         | /users              | -           |-                   | YES         | List users                              |
+| GET         | /users              | user_id     |-                   | YES         | Show user profile                       |
 | PUT         | /users              | -           |-                   | YES         | Update user profile                     |
-| DELETE      | /users              | -           |-                   | YES         | Update user profile                     |
-
-
   
 </details>
 
@@ -49,38 +51,38 @@ Simply [click here](https://app.swaggerhub.com/apis/dimasyudhana/immersivedashbo
   
 | Method      | Endpoint            | Params      | JWT Token   | Function                                |
 | ----------- | ------------------- | ----------- | ----------- | --------------------------------------- |
-| POST        | /classes            | -           | YES         | Post a books                            |
-| GET         | /classes            | -           | YES         | Get All book                            |
-| GET         | /classes            | -           | YES         | Get MyBooks                             |
-| PUT         | /classes            | class_id    | YES         | Edit book                               |
-| DELETE      | /classes            | class_id    | YES         | Delete book                             |
-| GET         | /classes            | class_id    | YES         | Get books Detail                        |  
+| POST        | /classes            | -           | YES         | Register new class                      |
+| GET         | /classes            | -           | YES         | Get list class                          |
+| GET         | /classes            | class_id    | YES         | Get class                               |
+| PUT         | /classes            | class_id    | YES         | Edit class                              |
+| DELETE      | /classes            | class_id    | YES         | Delete book                             |  
 
-  </details>
-     <details>
+</details>
+
+<details>
   <summary>📠 Mentees</summary>
   
-| Method      | Endpoint            | Params      | JWT Token   | Function                                |
-| ----------- | ------------------- | ----------- | ----------- | --------------------------------------- |
-| POST        | /mentees            | -           | YES         | Make User Rent detail                   |
-| GET         | /mentees            | mentee_id   | YES         | Get User Rent detail                    |
-
+| Method      | Endpoint            | Params                | JWT Token   | Function                                |
+| ----------- | ------------------- | --------------------- | ----------- | --------------------------------------- |
+| POST        | /mentees            | -                     | YES         | Register new mentee                     |
+| GET         | /mentees            | -                     | YES         | List Mentees                            |
+| GET         | /mentees            | mentee_id             | YES         | Mentee Profile include its Feedbacks    |
+| PUT         | /mentees            | mentee_id             | YES         | Update Mentee Profile                   |
+| DELETE      | /mentees            | mentee_id             | YES         | Deactive Mentee Profile                 |
+| DELETE      | /mentees            | mentee_id/feedbacks   | YES         | Mentee Profile include its Feedbacks    |
 
   </details>
+
   <details>
    <summary>🔊 Feedbacks</summary>
   
 | Method      | Endpoint            | Params      | JWT Token   | Function                                |
 | ----------- | ------------------- | ----------- | ----------- | --------------------------------------- |
-| POST        | /feedbacks          | -           | YES         | Make User Rent                          |
-| GET         | /feedbacks          | rents_id    | YES         | Get User Rent                           |
-| GET         | /feedbacks          | -           | YES         | Get History Rent from User              |
-| GET         | /feedbacks          | -           | YES         | Get History Book Rented from User       |
-
+| POST        | /feedbacks          | -           | YES         | Register feedback for mentees           |
+| PUT         | /feedbacks          | feedback_id | YES         | Update selected feedback for mentees    |
+| DELETE      | /feedbacks          | feedback_id | YES         | Unregister spesif feedback              |
 
   </details>
-    
- 
 
 # 🛠️ How to Run Locally
 
@@ -93,7 +95,7 @@ $ git clone https://github.com/GroupProject2-Kelompok4/BE.git
 - Go to directory
 
 ```
-$ cd ./GroupProject2-Kelompok4/BE
+$ cd BE
 ```
 - Run the project
 ```
@@ -110,7 +112,7 @@ $ go run main.go
 
 # 🤖 Author
 
--  Dimas A Yudhana  <br>  [![GitHub](https://img.shields.io/badge/Dimas-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dimasyudhana)
+-  Dimas A Yudhana  <br>  [![GitHub](https://img.shields.io/badge/Dimas A Yudhana-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dimasyudhana)
 
 <h5>
 <p align="center">Created by Group 4 ©️ 2023</p>
