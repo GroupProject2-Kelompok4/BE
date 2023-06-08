@@ -16,7 +16,7 @@ type PrependEncoder struct {
 
 // Set this to true if running in production
 func Log() *zap.Logger {
-	production := false
+	production := true
 	cfg := ZapGetConfig(production)
 
 	enc := &PrependEncoder{
