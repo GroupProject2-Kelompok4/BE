@@ -6,13 +6,14 @@ import (
 	"io"
 	"log"
 	"mime/multipart"
+	"os"
 	"strings"
 	"time"
 
 	"cloud.google.com/go/storage"
 	"github.com/GroupProject2-Kelompok4/BE/app/config"
 	"github.com/google/uuid"
-	"google.golang.org/api/option"
+	"github.com/labstack/echo/v4"
 )
 
 type ClientUploader struct {
@@ -22,22 +23,39 @@ type ClientUploader struct {
 	uploadPath string
 }
 
-var Uploader *ClientUploader
-
-func init() {
-	ctx := context.Background()
-	client, err := storage.NewClient(ctx, option.WithCredentialsFile(config.GCP_CREDENTIAL))
+func InitGCPClient() *storage.Client {
+	os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", config.GCP_CREDENTIAL)
+	client, err := storage.NewClient(context.Background())
 	if err != nil {
 		log.Fatal(err)
 	}
+	return client
+}
 
-	Uploader = &ClientUploader{
-		cl:         client,
-		bucketName: config.GCP_BUCKETNAME,
+func UploadImage(c echo.Context, file *multipart.FileHeader) (string, error) {
+	if file == nil {
+		return "", nil
+	}
+
+	image, err := file.Open()
+	if err != nil {
+		return "", err
+	}
+	defer image.Close()
+
+	sgcp := ClientUploader{
+		cl:         InitGCPClient(),
 		projectID:  config.GCP_PROJECTID,
+		bucketName: config.GCP_BUCKETNAME,
 		uploadPath: config.GCP_PATH,
 	}
 
+	imageURL, err := sgcp.UploadFile(image, file.Filename)
+	if err != nil {
+		return "", err
+	}
+
+	return imageURL, nil
 }
 
 // UploadFile uploads an object

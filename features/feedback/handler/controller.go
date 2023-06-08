@@ -37,25 +37,17 @@ func (fh *feedbackHandler) RegisterFeedbackMentee() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
 		}
 
-		f, err := c.FormFile("proof")
-		if err != nil {
-			c.Logger().Error("bad request while receive formfile")
-			return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
+		var imageURL string
+		file, err := c.FormFile("proof")
+		if err == nil {
+			imageURL, err = storages.UploadImage(c, file)
+			if err != nil {
+				return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Failed to upload image", nil, nil))
+			}
+			request.Proof = imageURL
 		}
 
-		blobFile, err := f.Open()
-		if err != nil {
-			c.Logger().Error("bad request while open fomfile")
-			return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
-		}
-
-		fileURL, err := storages.Uploader.UploadFile(blobFile, f.Filename)
-		if err != nil {
-			c.Logger().Error("bad request while upload to storage")
-			return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
-		}
-
-		request.Proof = fileURL
+		request.Proof = imageURL
 		result, err := fh.service.RegisterFeedbackMentee(RequestToCore(request), userId)
 		if err != nil {
 			if strings.Contains(err.Error(), "empty") {
@@ -89,25 +81,18 @@ func (fh *feedbackHandler) UpdateFeedbackMentee() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
 		}
 
-		f, err := c.FormFile("proof")
-		if err != nil {
-			c.Logger().Error("bad request while receive formfile")
-			return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
+		var imageURL string
+		file, err := c.FormFile("proof")
+		if err == nil {
+			imageURL, err = storages.UploadImage(c, file)
+			if err != nil {
+				return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Failed to upload image", nil, nil))
+			}
+			request.Proof = &imageURL
 		}
 
-		blobFile, err := f.Open()
-		if err != nil {
-			c.Logger().Error("bad request while open fomfile")
-			return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
-		}
+		request.Proof = &imageURL
 
-		fileURL, err := storages.Uploader.UploadFile(blobFile, f.Filename)
-		if err != nil {
-			c.Logger().Error("bad request while upload to storage")
-			return c.JSON(http.StatusBadRequest, helper.ResponseFormat(http.StatusBadRequest, "Bad request", nil, nil))
-		}
-
-		request.Proof = &fileURL
 		err1 := fh.service.UpdateFeedbackMentee(RequestToCore(&request), feedbackId, userId)
 		if err1 != nil {
 			if strings.Contains(err.Error(), "empty") {

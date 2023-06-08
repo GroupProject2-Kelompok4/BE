@@ -68,6 +68,6 @@ require (
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/spf13/viper v1.16.0
 	golang.org/x/crypto v0.9.0
-	google.golang.org/api v0.125.0
+	google.golang.org/api v0.125.0 // indirect
 	gorm.io/driver/mysql v1.5.1
 )
