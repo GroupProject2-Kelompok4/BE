@@ -1,10 +1,10 @@
 ## 📑 About the Project
 <p align="justify">Immersive Dashboard App<br>
   <br>
-This RESTful API was developed by using Golang and written based on Clean Architecture principles. Built with Echo as web framework, GORM as ORM, MySQL as DBMS etc.
+This RESTful API was developed by using Golang and written based on Clean Architecture principles.
 </p>
 
-## 🛠 Tools
+### 🛠 Tools
 **Backend:** <br>
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
@@ -24,15 +24,15 @@ This RESTful API was developed by using Golang and written based on Clean Archit
 ![GitHub](https://img.shields.io/badge/github%20Project-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 ![Discord](https://img.shields.io/badge/Discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)
 
-# 🔗 ERD
-<img src="ERD-ImmersiveDashboard.png">
+### Entity Relational Diagram
+<img src="./docs/ERD-ImmersiveDashboard.png">
 
-# 🔥 Open API
+### Open API
 
 Simply [click here](https://app.swaggerhub.com/apis/dimasyudhana/immersivedashboardproject/1.0.0) to see the details of endpoints we have agreed with our FE team.
 
 <details>
-  <summary>👶 Users </summary>
+  <summary> Users </summary>
   
 | Method      | Endpoint            | Params      |q-Params            | JWT Token   | Function                                |
 | ----------- | ------------------- | ----------- |--------------------| ----------- | --------------------------------------- |
@@ -47,7 +47,7 @@ Simply [click here](https://app.swaggerhub.com/apis/dimasyudhana/immersivedashbo
 </details>
 
 <details>
-  <summary>📑 Classes</summary>
+  <summary>Classes</summary>
   
 | Method      | Endpoint            | Params      | JWT Token   | Function                                |
 | ----------- | ------------------- | ----------- | ----------- | --------------------------------------- |
@@ -60,7 +60,7 @@ Simply [click here](https://app.swaggerhub.com/apis/dimasyudhana/immersivedashbo
 </details>
 
 <details>
-  <summary>📠 Mentees</summary>
+  <summary>Mentees</summary>
   
 | Method      | Endpoint            | Params                | JWT Token   | Function                                |
 | ----------- | ------------------- | --------------------- | ----------- | --------------------------------------- |
@@ -74,7 +74,7 @@ Simply [click here](https://app.swaggerhub.com/apis/dimasyudhana/immersivedashbo
   </details>
 
   <details>
-   <summary>🔊 Feedbacks</summary>
+   <summary>Feedbacks</summary>
   
 | Method      | Endpoint            | Params      | JWT Token   | Function                                |
 | ----------- | ------------------- | ----------- | ----------- | --------------------------------------- |
@@ -84,7 +84,7 @@ Simply [click here](https://app.swaggerhub.com/apis/dimasyudhana/immersivedashbo
 
   </details>
 
-# 🛠️ How to Run Locally
+### How to Run Locally
 
 - Clone it
 
@@ -104,13 +104,13 @@ $ go run main.go
 
 - Voila! 🪄
 
-### 🧰Backend
+### Specific Documentation
 
 - [Github Repository for the Backend team](https://github.com/GroupProject2-Kelompok4/BE.git)
 - [Swagger OpenAPI](https://app.swaggerhub.com/apis/dimasyudhana/immersivedashboardproject/1.0.0)
 
 
-# 🤖 Author
+# Author
 
 -  Dimas A Yudhana  <br>  [![GitHub](https://img.shields.io/badge/DimasYudhana-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dimasyudhana)
 
